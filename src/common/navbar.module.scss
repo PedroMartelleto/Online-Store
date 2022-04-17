@@ -1,0 +1,216 @@
+@use "./colors" as c;
+@use "./sizes" as f;
+
+.breadcrumb {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 12px;
+    text-decoration: none;
+    color: c.$C1C;
+    padding-left: f.$padding;
+    padding-right: f.$padding;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.breadItem {
+    color: c.$C1C;
+    text-decoration: none;
+}
+
+.breadItemActive {
+    color: c.$C1A;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    width: auto;
+    padding: f.$padding;
+}
+
+.categoriesBar {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: c.$C1H;
+    padding-left: calc(f.$padding - 16px);
+    padding-right: calc(f.$padding - 16px);
+    flex-wrap: wrap;
+}
+
+.categoriesBarBtn {
+    margin: 6px 0px;
+    padding: 10px 16px;
+    transition: all 0.3s ease;
+}
+
+.categoriesBarBtn:hover {
+    background-color: c.$C1E;
+}
+
+.searchBar {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    background-color: c.$C1H;
+    border: 1px solid c.$C1D;
+    border-radius: 12px;
+    margin-left: 32px;
+    margin-right: 32px;
+    width: fit-content;
+    display: flex;
+    flex-shrink: 1;
+    flex-grow: 1;
+    align-items: stretch;
+    justify-content: center;
+    overflow: hidden;
+    max-width: 400px;
+    min-width: 0px;
+    position: relative;
+}
+
+.searchBar > input {
+    border: none;
+    background: none;
+    flex-grow: 1;
+    padding: 16px;
+    min-width: 46px;
+    text-align: left;
+}
+
+.searchBar > input:focus {
+    border: none;
+    outline: none;
+}
+
+.searchBar:focus-within {
+    outline: 1px solid blue;
+}
+
+.searchBarIcon {
+    flex-grow: 0;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-left: 1px solid c.$C1D;
+    padding: 12px 16px;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.searchBarIcon:hover {
+    background-color: c.$C1E;
+}
+
+.verticalContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.btnsContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 1;
+    flex-grow: 0;
+    flex-wrap: nowrap;
+}
+
+.btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 12px 17px 14px 17px;
+    max-width: 64px;
+    max-height: 64px;
+    line-height: 44px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-size: 23px;
+}
+
+.btn:hover {
+    background-color: c.$C1F;
+}
+
+.logo {
+    cursor: pointer;
+    max-width: 100px;
+    content: url("https://i.imgur.com/IguEefx.png");
+}
+
+@media screen and (max-width: 880px) {
+    .logo {
+        flex-shrink: 1;
+        max-width: 80px;
+    }
+
+    .btn {
+        font-size: 19px;
+    }
+
+    .searchBar {
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+}
+
+@media screen and (max-width: 530px) {
+    .logo {
+        flex-shrink: 1;
+        max-width: 64px;
+    }
+
+    .btn {
+        font-size: 18px;
+    }
+
+    .searchBar {
+        margin-left: 12px;
+        margin-right: 12px;
+        position: relative;
+        left: 20px;
+    }
+
+    .logo {
+        content: url("https://i.imgur.com/2RrwTeT.png");
+        max-width: 40px;
+        padding: 8px;
+    }
+
+    .btnsContainer {
+        position: relative;
+        left: 20px;
+    }
+}
+
+@media screen and (max-width: 880px) {
+    .categoriesBar {
+        justify-content: center;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .searchBar {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .searchBarIcon {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 270px) {
+    .searchBar {
+        display: none;
+    }
+}
+

@@ -1,0 +1,31 @@
+$scale1: 32px;
+$scale2: 26px;
+$scale3: 22px;
+$scale4: 18px;
+$scale5: 15px;
+$scale6: 12px;
+$button: 15px;
+$lead: 17px;
+$body: 14px;
+$caption: 12px;
+$header1: 32px;
+$header2: 20px;
+$padding: 32px;
+$cardPadding: 18px;
+
+:export {
+    scale1: $scale1;
+    scale2: $scale2;
+    scale3: $scale3;
+    scale4: $scale4;
+    scale5: $scale5;
+    scale6: $scale6;
+    button: $button;
+    lead: $lead; 
+    body: $body;
+    caption: $caption;
+    header1: $header1;
+    header2: $header2;
+    padding: $padding;
+    cardPadding: $cardPadding;
+}

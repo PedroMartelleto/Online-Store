@@ -1,0 +1,119 @@
+@use "../common/colors" as c;
+@use "../common/sizes" as f;
+.container {
+    align-items: stretch;
+}
+
+.prodCont {
+    padding-left: f.$padding;
+    padding-right: f.$padding;
+}
+
+.prodCont > h1 {
+    font-weight: 600;
+}
+
+.prodCont > h6 {
+    color: c.$C1C;
+    font-size: f.$scale6;
+    font-weight: 600;
+    padding-top: 48px;
+}
+
+.categories {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.categories > .btn {
+    text-align: left;
+}
+
+.categories > h4 {
+    font-weight: 600;
+}
+
+.rating > h4 {
+    font-weight: 600;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.stars > input {
+    margin-right: 8px;
+    position: relative;
+    top: 2px;
+    padding: 5px;
+}
+
+.prodLink {
+    color: c.$C1A;
+    text-decoration: none;
+}
+
+.productCard {
+    padding: f.$cardPadding;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.productCard:hover {
+    background-color: c.$C1F;
+}
+
+.cardBorder {
+    border: 1px solid c.$C1E;
+    box-sizing: border-box;
+}
+
+.prodCardImgContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.productCard > h5 {
+    margin-top: 10px;
+}
+
+.productCardImage {
+    max-width: 200px;
+    border-radius: 20px 3px 20px 3px;
+}
+
+.starRating {
+    display: flex;
+    flex-direction: row;
+    margin-top: 4px;
+}
+
+.productCardTail {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-grow: 1;
+    width: 100%;
+}
+
+@media screen and (max-width: 530px) {
+    .productCard {
+        margin-top: 24px;
+    }
+}

@@ -1,0 +1,77 @@
+@use "./colors" as c;
+@use "./sizes" as f;
+
+/* Common styles */
+
+.responsiveRow {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 64px;
+    padding-bottom: 64px;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 880px) {
+    .responsiveRow {
+        justify-content: center;
+    }
+}
+
+.btn {
+    border-radius: 12px;
+    font-weight: 700;
+    display: block;
+    padding: 6px 48px;
+    line-height: 22px;
+    min-width: 170px;
+    min-height: 56px;
+}
+
+.btnOutlined {
+    border: 2px solid c.$C2A;
+    color: c.$C1J;
+}
+
+.btnFilled {
+    background-color: c.$C2A;
+    color: c.$C1J;
+}
+
+.btnSecondary {
+    color: c.$C1A;
+    background-color: c.$C1F;
+}
+
+.btnBuy {
+    color: c.$C1J;
+    background-color: c.$C2A;
+    padding: 6px 12px;
+    min-width: 96px;
+    min-height: 38px;
+    border: 2px solid c.$C2B;
+}
+
+.categoriesText {
+    padding: 12px 12px 12px f.$padding;
+}
+
+.categoriesTextTitle {
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.categoriesTextLink {
+    display: block;
+    color: c.$C2A;
+    font-size: f.$body;
+    font-weight: 300;
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.categoryBtn {
+    margin-top: 32px;
+}
