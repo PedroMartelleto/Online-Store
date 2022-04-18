@@ -1,5 +1,17 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
+
+.leftMenu {
+    padding-right: 32px;
+    display: flex;
+    flex-direction: row;
+}
+
+.leftMenuLeft {
+    min-width: 180px;
+    padding-right: 40px;
+}
+
 .container {
     align-items: stretch;
 }
@@ -35,8 +47,13 @@
     font-weight: 600;
 }
 
+.rating {
+    margin-top: 32px;
+}
+
 .rating > h4 {
     font-weight: 600;
+    margin-bottom: 18px;
 }
 
 .stars {
@@ -67,6 +84,7 @@
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
+    margin: 4px;
 }
 
 .productCard:hover {
@@ -115,5 +133,11 @@
 @media screen and (max-width: 530px) {
     .productCard {
         margin-top: 24px;
+    }
+}
+
+@media screen and (max-width: 470px) {
+    .leftMenuLeft {
+        display: none;
     }
 }

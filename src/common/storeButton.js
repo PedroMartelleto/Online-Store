@@ -10,7 +10,7 @@ const LeftArrow = props => <InlineIcon icon="bxs:left-arrow" />
 
 const StoreButton = props => {
     return (
-        <button className={cx({
+        <button {...props} className={cx({
             "btn": true,
             "btnOutlined": props.variant === "outlined",
             "btnFilled": props.variant === "filled",

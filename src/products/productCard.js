@@ -124,12 +124,8 @@ const ProductCard = props => {
                 <div className={cx("prodCardImgContainer")}>
                     <img className={cx("productCardImage")} src={prod.coverLink} alt="Book cover" />
                 </div>
-                <h5 style={{fontWeight: 500}}>
-                    {prod.title}
-                </h5>
-                <h6>
-                    {prod.author}
-                </h6>
+                <h5 style={{fontWeight: 500}}>{prod.title}</h5>
+                <h6>{prod.author}</h6>
                 <StarRating star={prod.averageRating} />
                 <div className={cx("productCardTail")}>
                     <h4 style={{fontWeight: 600}}>

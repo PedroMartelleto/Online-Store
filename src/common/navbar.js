@@ -19,7 +19,10 @@ const Navbar = (props) => {
     return (
         <div className={cx("verticalContainer")}>
             <div className={cx("container")}>
-                <img src="https://i.imgur.com/2RrwTeT.png" alt="book store icon" className={cx("logo")} onMouseDown={event => window.location.href = "/"} />
+                <img src="https://i.imgur.com/2RrwTeT.png" alt="book store icon"
+                     className={cx("logo")}
+                     onMouseDown={event => window.location.href = "/"}
+                />
                 <SearchBar/>
                 <div className={cx("btnsContainer")}>
                     <NavbarButton icon="bx:user" />

@@ -8,9 +8,9 @@ const cx = classNames.bind(styles)
 const CategoriesText = props => {
     return (
         <h4 className={cx("categoriesText")} style={props.noPadding ? {paddingLeft: 0} : {}}>
-            <div className={cx("categoriesTextTitle")}>
+            <h4 className={cx("categoriesTextTitle")}>
                 {props.title}
-            </div>
+            </h4>
             {props.links.map((link, _) => {
                 return (
                     <Link key={"link_cat_text_" + link} className={cx("categoriesTextLink")} to={"#" + link.toLowerCase().replaceAll(" ", "-")}>
