@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 
 const NavbarButton = (props) => {
     return (
-        <button className={cx("btn")}>
+        <button {...props} className={cx("btn")}>
             <Icon icon={props.icon} />
         </button>
     )
@@ -25,8 +25,8 @@ const Navbar = (props) => {
                 />
                 <SearchBar/>
                 <div className={cx("btnsContainer")}>
-                    <NavbarButton icon="bx:user" />
-                    <NavbarButton icon="bx:cart" />
+                    <NavbarButton icon="bx:user" onMouseDown={event => window.location.href = "/user"} />
+                    <NavbarButton icon="bx:cart" onMouseDown={event => window.location.href = "/cart"} />
                 </div>
             </div>
             <CategoriesBar categories={["Fiction", "Science"]} />

@@ -1,24 +1,16 @@
 import React from "react"
-import Navbar from "../common/navbar"
 
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import ProductCard, { StarRating, TestProduct } from "./productCard"
 import ResponsiveRow from "../common/responsiveRow"
-import NavBreadcrumb from "../common/navBreadcrumb"
 import CategoriesText from "../common/categoriesText"
 const cx = classNames.bind(styles)
 
 const ProductsPage = props => {
     const filters = []
 
-    return <div className={cx("container")}>
-        <Navbar />
-        <NavBreadcrumb path={[
-            { name: "Homepage", link: "/" },
-            { name: "Fiction", link: "/fiction" },
-        ]} />
-        <div className={cx("prodCont")}>
+    return <div className={cx("prodCont")}>
             <h1>Fiction</h1>
             {!!filters && filters.length > 0 ? (
             <div>
@@ -77,7 +69,6 @@ const ProductsPage = props => {
                     </ResponsiveRow>
                 </div>
         </div>
-    </div>
 }
 
 export default ProductsPage

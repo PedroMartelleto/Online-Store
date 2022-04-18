@@ -1,7 +1,5 @@
 import React from "react"
 import { useParams } from "react-router"
-import Navbar from "../common/navbar"
-import NavBreadcrumb from "../common/navBreadcrumb"
 import ResponsiveRow from "../common/responsiveRow"
 import StoreButton, { RightArrow } from "../common/storeButton"
 import NotFoundPage from "../notFound/notFoundPage"
@@ -24,12 +22,6 @@ const ProductDetailPage = props => {
 
     return (
         <div>
-            <Navbar/>
-            <NavBreadcrumb path={[
-                { name: "Homepage", link: "/" },
-                { name: "Fiction", link: "/fiction" },
-                { name: prod.title, link: "/product/" + prod.id }
-            ]} />
             <div className={cx("detailContainer")}>
                 <div className={cx("detailText")}>
                     <div className={cx("title")}>

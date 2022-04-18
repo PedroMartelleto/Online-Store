@@ -1,5 +1,14 @@
 # Online-Store-Fullstack
 
+TODOs
+
+* Backend
+* Category navigation
+* Cart page + Private route
+* Settings page + Private route to settings
+
+* Page Icon
+
 <div id="top"></div>
 <!--
 *** Thanks for checking out the Best-README-Template. If you have a suggestion
