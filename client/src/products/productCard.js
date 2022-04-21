@@ -116,7 +116,7 @@ const ProductCard = props => {
     const prod = props.product
 
     return (
-        <Link className={cx("prodLink")} to={`/products/detail/${prod.id}`}>
+        <Link className={cx("prodLink")} to={`/products/${prod.id}`}>
                 <div className={cx({
                     "productCard": true,
                     "cardBorder": props.border

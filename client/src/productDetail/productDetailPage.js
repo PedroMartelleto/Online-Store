@@ -9,6 +9,7 @@ import ProductInfo from "./productInfo"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Link } from "react-router-dom"
+import NavbarContainer from "../common/navbarContainer"
 const cx = classNames.bind(styles)
 
 const ProductDetailPage = props => {
@@ -22,6 +23,7 @@ const ProductDetailPage = props => {
 
     return (
         <div>
+            <NavbarContainer />
             <div className={cx("detailContainer")}>
                 <div className={cx("detailText")}>
                     <div className={cx("title")}>

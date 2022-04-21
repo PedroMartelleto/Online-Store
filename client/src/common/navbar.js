@@ -29,7 +29,7 @@ const Navbar = (props) => {
                     <NavbarButton icon="bx:cart" onMouseDown={event => window.location.href = "/cart"} />
                 </div>
             </div>
-            <CategoriesBar categories={["Fiction", "Science"]} />
+            <CategoriesBar categories={["Fiction", "Psychology", "Horror", "Science Fiction", "Humor", "Apocalyptic"]} />
         </div>
     )
 }

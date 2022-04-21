@@ -4,7 +4,6 @@ import StoreButton from "../common/storeButton"
 
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
-import ResponsiveRow from "../common/responsiveRow"
 const cx = classNames.bind(styles)
 
 const ProductInfo = props => {

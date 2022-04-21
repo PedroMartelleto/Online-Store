@@ -7,7 +7,7 @@ const cx = classNames.bind(styles)
 
 const CategoriesText = props => {
     return (
-        <h4 className={cx("categoriesText")} style={props.noPadding ? {paddingLeft: 0} : {}}>
+        <div className={cx("categoriesText")} style={props.noPadding ? {paddingLeft: 0} : {}}>
             <h4 className={cx("categoriesTextTitle")}>
                 {props.title}
             </h4>
@@ -23,7 +23,7 @@ const CategoriesText = props => {
                 {props.button + "  "}
                 <RightArrow />
             </StoreButton> : undefined}
-        </h4>
+        </div>
     )
 }
 
