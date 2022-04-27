@@ -1,4 +1,4 @@
-const { User } = require('../models')
+const { User } = require('../dataModel')
 const { authorizeToken } = require('../tokenAuth')
 
 const router = require('express').Router()
@@ -45,10 +45,6 @@ router.get("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
         console.warn(err)
         res.status(500).json(err)
     }
-})
-
-router.get("/usertest", (req, res) => {
-    res.send("Hello from user route.")
 })
 
 module.exports = router

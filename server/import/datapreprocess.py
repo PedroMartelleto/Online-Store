@@ -13,6 +13,8 @@ columns_map = {}
 for col in books.columns:
     columns_map[col] = convert(col)
 
+# TODO: Add price, quantity and convert genresAndVotes to genres
+
 books.rename(columns=columns_map, inplace=True)
 
 books.to_csv("processed.csv", index=False, encoding="utf-8")

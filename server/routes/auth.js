@@ -1,4 +1,4 @@
-const { User } = require('../models')
+const { User } = require('../dataModel')
 
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')

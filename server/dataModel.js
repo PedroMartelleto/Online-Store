@@ -1,14 +1,17 @@
+const { default: mongoose } = require("mongoose")
 
 const ProductSchema = new mongoose.Schema(
     {
         // Basic info
-        id: { type: String, required: true, unique: true },
+        _id: { type: mongoose.Types.ObjectId, required: true, unique: true },
         title: { type: String, required: true },
         link: { type: String, required: false },
         series: { type: String, required: false },
         coverLink: { type: String, required: false },
         author: { type: String, required: true },
         authorLink: { type: String, required: false },
+        price: { type: Number, required: false },
+        quantity: { type: Number, required: false },
         // Rating and reviews
         ratingCount: { type: Number, required: true },
         reviewCount: { type: Number, required: true },
@@ -23,7 +26,7 @@ const ProductSchema = new mongoose.Schema(
         datePublished: { type: Date, required: false },
         publisher: { type: String, required: false },
         originalTitle: { type: String, required: false },
-        genreAndVotes: { type: String, required: false },
+        genres: { type: String, required: false },
         // Other types of ID
         isbn: { type: String, required: false },
         isbn13: { type: String, required: false },
@@ -39,7 +42,7 @@ const ProductSchema = new mongoose.Schema(
         // Recommendations
         recommendedBooks: { type: String, required: false }
     },
-    { timestamps: true }
+    { _id: false, timestamps: true }
 )
 
 const UserSchema = new mongoose.Schema(
@@ -54,14 +57,12 @@ const UserSchema = new mongoose.Schema(
         state: { type: String, required: true },
         zip: { type: String, required: true },
         isAdmin: { type: Boolean, required: true, default: false },
-    },
-    { timestamps: true }
+    }
 )
-
 
 const CartSchema = new mongoose.Schema(
     {
-        userId: { type: String, required: true, unique: true },
+        userId: { type: mongoose.Types.ObjectId, required: true, unique: true },
         products: [
             {
                 productId: { type: String },
@@ -74,14 +75,13 @@ const CartSchema = new mongoose.Schema(
 
 const OrderSchema = new mongoose.Schema(
     {
-        userId: { type: String, required: true, unique: true },
+        userId: { type: mongoose.Types.ObjectId, required: true, unique: true },
         products: [
             {
                 productId: { type: String },
                 quantity: { type: Number, default: 1 }
             }
         ],
-        amount: { type: Number, required: true },
         address: { type: String, required: true },
         city: { type: String, required: true },
         state: { type: String, required: true },
