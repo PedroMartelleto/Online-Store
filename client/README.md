@@ -74,7 +74,6 @@ Any comments you wish to add.
 
 TODOs
 
-* Backend
 * Category navigation
 * Cart page + Private route
 * Settings page + Private route to settings

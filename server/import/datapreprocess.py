@@ -17,8 +17,6 @@ for col in books.columns:
 
 books.rename(columns=columns_map, inplace=True)
 
-# TODO: Add price, quantity and convert genresAndVotes to genres
-
 probs = np.array([ 80, 10, 10, 20, 10, 30, 20, 10, 10, 85 ])
 probs = probs / probs.sum()
 decimal = np.random.choice([ 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ], p=probs, size=books.shape[0]) - 0.01
