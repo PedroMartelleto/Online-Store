@@ -1,6 +1,26 @@
 # Online-Store-Fullstack
 
-Juntar os dois
+## TO-DOs
+
+### To-do pages
+
+* Cart
+* Login
+* Sign Up
+* Edit Account (Admin & User)
+* Manage Users (Admin)
+
+## To-do variants
+
+* Products (Admin)
+
+### Done pages
+
+* Home
+* Product detail
+* Products
+* 404
+
 
 ## Requirements
  - General Requirements
