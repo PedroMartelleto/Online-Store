@@ -117,10 +117,10 @@ const ProductCard = props => {
 
     return (
         <Link className={cx("prodLink")} to={`/products/${prod.id}`}>
-                <div className={cx({
-                    "productCard": true,
-                    "cardBorder": props.border
-                })}>
+            <div className={cx({
+                "productCard": true,
+                "cardBorder": props.border
+            })}>
                 <div className={cx("prodCardImgContainer")}>
                     <img className={cx("productCardImage")} src={prod.coverLink} alt="Book cover" />
                 </div>

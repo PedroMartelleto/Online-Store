@@ -1,0 +1,54 @@
+@use "../common/colors" as c;
+@use "../common/sizes" as f;
+
+.cartPage {
+    padding: 32px;
+}
+
+.cartContainer {
+    padding: 16px;
+    border: 1px solid c.$C1E;
+    box-sizing: border-box;
+    width: fit-content;
+    border-radius: 5px;
+    margin-left: 32px;
+    margin-right: 32px;
+}
+
+.prodImg {
+    max-width: 128px;
+    border-radius: 20px 3px 20px 3px;
+}
+
+.resultRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.completeOrderBtn {
+    margin-top: 16px;
+    padding: 16px 20px;
+}
+
+.prodDetails {
+    flex-grow: 1;
+    padding-left: 16px;
+    padding-right: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-top: 10px;
+}
+
+@media screen and (max-width: 600px) {
+    .cartContainer {
+        justify-content: center;
+        border: none;
+        width: 100%;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
