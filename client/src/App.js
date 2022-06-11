@@ -1,3 +1,4 @@
+import React from "react"
 import './App.scss'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom"
 import ProductDetailPage from './productDetail/productDetailPage'
@@ -8,6 +9,7 @@ import LoginPage from './auth/loginPage'
 import LoginSettingsPage from './auth/loginSettingsPage'
 import SignUpPage from './auth/signUpPage'
 import CartPage from "./cart/cartPage"
+import ManageUsers from "./manageUsers"
 
 const App = () => {
 	return (
@@ -18,6 +20,8 @@ const App = () => {
 				<Route path="/" element={<HomePage />} />
 				<Route path="/products" element={<ProductsPage />} />
 				<Route path="/products/:id" element={<ProductDetailPage />} />
+				
+				<Route path="/manageUsers" element={<ManageUsers />} />
 
 				<Route path="/login" element={<LoginPage />} />
 				<Route path="/user" element={<LoginSettingsPage />} />

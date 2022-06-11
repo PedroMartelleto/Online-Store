@@ -3,6 +3,20 @@
 
 /* Common styles */
 
+.checkbox {
+    margin-top: 20px;
+    margin-bottom: 50px;
+}
+
+.checkboxLabel {
+    margin-left: 12px;
+}
+
+.btnDisabled {
+    cursor: default;
+    opacity: 0.5;
+}
+
 .responsiveRow {
     display: flex;
     flex-grow: 1;
@@ -28,6 +42,7 @@
     line-height: 22px;
     min-width: 170px;
     min-height: 56px;
+    transition: all 0.3s;
 }
 
 .btnOutlined {
@@ -52,6 +67,10 @@
     min-width: 96px;
     min-height: 38px;
     border: 2px solid c.$C2B;
+}
+
+.btnNoFill:hover {
+    background-color: c.$C1F;
 }
 
 .categoriesText {

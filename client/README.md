@@ -4,15 +4,7 @@
 
 ### To-do pages
 
-* Cart
-* Login
-* Sign Up
-* Edit Account (Admin & User)
 * Manage Users (Admin)
-
-## To-do variants
-
-* Products (Admin)
 
 ### Done pages
 

@@ -113,6 +113,7 @@ const StarRating = props => {
 
 const ProductCard = props => {
     const prod = props.product
+    const isAdmin = true // props.isAdmin
 
     return (
         <Link className={cx("prodLink")} to={`/products/${prod.id}`}>
@@ -130,7 +131,9 @@ const ProductCard = props => {
                     <h4 style={{fontWeight: 600}}>
                         {prod.price + " USD"}
                     </h4>
-                    <StoreButton variant="buy">Buy now</StoreButton>
+                    <StoreButton variant="buy">
+                        {!isAdmin ? "Buy now" : "Edit"}
+                    </StoreButton>
                 </div>
             </div>
         </Link>

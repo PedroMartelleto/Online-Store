@@ -1,9 +1,19 @@
 @use "common/sizes" as f;
+@use "common/colors" as c;
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
 * {
   padding: 0px;
   margin: 0px;
+}
+
+.caption {
+  display: block;
+  text-align: left;
+  font-size: f.$caption;
+  color: c.$C1C;
+  margin-bottom: 28px;
+  margin-top: 4px;
 }
 
 a, a:hover, a:focus, a:active {

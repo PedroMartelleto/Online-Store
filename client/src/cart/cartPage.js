@@ -78,7 +78,7 @@ const CartPage = props => {
                     <h3>
                         Order summary
                     </h3>
-                    <div className={cx("caption")}>
+                    <div className="caption">
                         Pricing can change depending on shipping method and taxes of your state.
                     </div>
                     {

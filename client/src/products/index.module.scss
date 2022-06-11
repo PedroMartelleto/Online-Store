@@ -1,6 +1,14 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.titleCont {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    margin-bottom: 32px;
+    justify-content: space-between;
+}
+
 .leftMenu {
     padding-right: 32px;
     display: flex;

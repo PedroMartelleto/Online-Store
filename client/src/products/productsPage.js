@@ -6,6 +6,7 @@ import ProductCard, { StarRating, TestProduct } from "./productCard"
 import ResponsiveRow from "../common/responsiveRow"
 import CategoriesText from "../common/categoriesText"
 import NavbarContainer from "../common/navbarContainer"
+import StoreButton, { RightArrow } from "../common/storeButton"
 const cx = classNames.bind(styles)
 
 // MARK: - Functions used to keep track of the stars filters
@@ -39,12 +40,20 @@ const StarsCheckbox = props => {
 const ProductsPage = props => {
     const [ starsAllowed, setStarsAllowed ] = useState(new Set([1, 2, 3, 4, 5]))
     const filters = []
+    const isAdmin = true // props.isAdmin
 
     return (
         <>
             <NavbarContainer />
             <div className={cx("prodCont")}>
-                <h1>Fiction</h1>
+                <div className={cx("titleCont")}>
+                    <h1>Fiction</h1>
+                    {isAdmin ? 
+                        <StoreButton variant="filled" onMouseDown={event => window.location.href = "/products/new"} >
+                            {"Add a New Book "}<RightArrow color="white" />
+                        </StoreButton>
+                    : undefined}
+                </div>
                 {!!filters && filters.length > 0 ? (
                 <div>
                     <h6>Applied filters:</h6>

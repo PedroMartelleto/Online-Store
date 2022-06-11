@@ -31,6 +31,12 @@ function createBreadcrumbPath() {
 			name = "Homepage"
 		}
 
+		for (let i = name.length - 1; i >= 1; --i) {
+			if (name.charAt(i) === name.charAt(i).toUpperCase()) {
+				name = name.substring(0, i) + " " + name.substring(i)
+			}
+		}
+
 		link += path + "/"
 		
 		if (name != null && name.length > 0) {
@@ -46,8 +52,8 @@ function createBreadcrumbPath() {
 
 const NavBreadcrumb = props => {
     const path = createBreadcrumbPath()
-	console.log(path)
-    return (
+
+	return (
         <div className={cx("breadcrumb")}>
             {path.map((item, index) => {
                 return (

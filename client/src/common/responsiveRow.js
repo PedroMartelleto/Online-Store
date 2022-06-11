@@ -5,10 +5,13 @@ import classNames from "classnames/bind"
 const cx = classNames.bind(styles)
 
 const ResponsiveRow = props => {
+    const { classNames, ...otherProps } = props
+
     return (
         <div className={cx({
-            "responsiveRow": true
-        })} {...props}>
+            "responsiveRow": true,
+            ...classNames
+        })} {...otherProps}>
             {props.children}
         </div>
     )

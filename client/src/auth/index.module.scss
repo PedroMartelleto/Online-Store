@@ -1,0 +1,104 @@
+@use "../common/sizes" as f;
+@use "../common/colors" as c;
+
+.loginPage {
+    padding: 0px 48px 48px 48px;
+}
+
+.loginPage > h3 {
+    font-weight: 600;
+    margin-bottom: 52px;
+}
+
+.btns {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+}
+
+.altBtn {
+    padding: 0px 20px !important;
+    margin-left: 32px !important;
+    min-height: 46px !important;
+    position: relative;
+    top: -4px;
+}
+
+.btnsForgot {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-end;
+}
+
+.btnsForgot > button {
+    margin: 0px;
+}
+
+.altArrow {
+    position: relative;
+    top: -2px;
+    margin-left: 10px;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 16px;
+}
+
+.paymentTitle {
+    margin-top: 62px;
+    font-weight: 600;
+}
+
+.inputFieldCont {
+    font-size: 12px;
+    font-weight: 600;
+    width: 319px;
+    display: flex;
+    flex-direction: column;
+}
+
+.rowCompact {
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+
+.label {
+    font-size: 12px;
+    font-weight: 600;
+    display: block;
+    flex-grow: 1;
+    margin-bottom: 4px;
+}
+
+.inputFieldCont > input {
+    flex-grow: 1;
+    height: 42px;
+    border: 1px solid c.$C1D;
+    border-radius: 12px;
+    background-color: c.$C1H;
+    padding-left: 21px;
+    padding-right: 21px;
+}
+
+.loginSettingsPage {
+    padding: 32px;
+}
+
+.loginSettingsPage > h3 {
+    font-weight: 600;
+}
+
+.submit {
+    display: block;
+    padding: 16px 36px !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
