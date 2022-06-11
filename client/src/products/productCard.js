@@ -1,7 +1,6 @@
 import React from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
-import AppColors from "../common/colors"
 import { Icon } from "@iconify/react"
 import StoreButton from "../common/storeButton"
 import { Link } from "react-router-dom"
@@ -100,7 +99,7 @@ const StarRating = props => {
 
         stars.push(<Icon key={"star_" + i}
                          icon={icon}
-                         color={AppColors.C1A}
+                         color="#FDBC15"
                          width={18}
                    />)
     }

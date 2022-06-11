@@ -10,11 +10,21 @@
     padding-right: f.$padding;
     padding-top: 30px;
     padding-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+@media screen and (max-width: 880px) {
+    .breadcrumb {
+        justify-content: center;
+    }
 }
 
 .breadItem {
     color: c.$C1C;
     text-decoration: none;
+    margin-left: 5px;
 }
 
 .breadItemActive {

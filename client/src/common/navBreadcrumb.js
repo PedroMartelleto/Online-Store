@@ -46,7 +46,7 @@ function createBreadcrumbPath() {
 
 const NavBreadcrumb = props => {
     const path = createBreadcrumbPath()
-
+	console.log(path)
     return (
         <div className={cx("breadcrumb")}>
             {path.map((item, index) => {
@@ -55,8 +55,7 @@ const NavBreadcrumb = props => {
                         "breadItem": true,
                         "breadItemActive": index === path.length - 1
                     })}>
-                        {item.name}
-                        {index+1 < path.length ? " / " : null}
+                        {item.name + (index+1 < path.length ? " > " : "")}
                     </Link>
                 )
                 })}
