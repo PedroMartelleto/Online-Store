@@ -41,10 +41,14 @@ const LoginSettingsPage = props => {
                         <InputField label="ZIP/Postal code" userData={userData} setUserData={setUserData} />
                     </ResponsiveRow>
 
-                    <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
                     {isAdmin ? 
-                    <InputField label="Admin list (emails)" userData={userData} setUserData={setUserData} /> : null}    
+                    <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
+                        <InputField label="Admin list (emails)" userData={userData} setUserData={setUserData} />
+                        <StoreButton className={{ [cx("submit")]: true }} variant="outlined" onMouseDown={event => window.location.href = "/user/manageUsers"}>
+                            Manage Users
+                        </StoreButton>
                     </ResponsiveRow>
+                    : null}
 
                     <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
                         <StoreButton className={{ [cx("submit")]: true }} variant="filled">

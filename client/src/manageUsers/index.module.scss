@@ -1,3 +1,38 @@
 .manageUsersPage {
     padding: 48px;
 }
+
+.manageUsersPage > h1 {
+    font-weight: 600;
+}
+
+.titleCont {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.createAccount {
+    padding: 10px !important;
+    max-height: 42px;
+    position: relative;
+    top: -10px;
+}
+
+.delete {
+    padding: 10px !important;
+    min-width: 100px !important;
+    min-height: 40px !important;
+    position: relative;
+    top: -4px;
+}

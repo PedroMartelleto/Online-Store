@@ -11,6 +11,16 @@
     border: 1px solid c.$C1F;
 }
 
+.title > h1, .title > h3 {
+    width: fit-content;
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .prodInfo {
     padding-bottom: 40px;
 }
@@ -60,7 +70,7 @@
     margin-bottom: 10px;
 }
 
-.price > h2 {
+.actions > h2 {
     font-weight: 600;
 }
 
@@ -118,7 +128,7 @@
     color: inherit;
     font-size: inherit;
     font-family: inherit;
-    padding-bottom: 16px;
+    margin-bottom: 16px;
 }
 
 .detailText > p {

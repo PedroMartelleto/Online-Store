@@ -2,17 +2,10 @@
 
 ## TO-DOs
 
-### To-do pages
+## Functionalities
 
-* Manage Users (Admin)
-
-### Done pages
-
-* Home
-* Product detail
-* Products
-* 404
-
+- Private routes
+- 
 
 ## Requirements
  - General Requirements

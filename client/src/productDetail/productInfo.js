@@ -8,6 +8,7 @@ const cx = classNames.bind(styles)
 
 const ProductInfo = props => {
     const prod = props.product
+    const isAdmin = true // props.isAdmin
 
     return (
         <div className={cx("prodInfo")}>
@@ -19,20 +20,35 @@ const ProductInfo = props => {
                     <p>Page count:</p>
                 </div>
                 <div className={cx("infoValue")}>
-                    <p>{prod.publisher}</p>
-                    <p>{prod.datePublished}</p>
-                    <p>{prod.reviewCount}</p>
-                    <p>{prod.numberOfPages}</p>
+                    <p contentEditable={isAdmin}>{prod.publisher}</p>
+                    <p contentEditable={isAdmin}>{prod.datePublished}</p>
+                    <p contentEditable={isAdmin}>{prod.reviewCount}</p>
+                    <p contentEditable={isAdmin}>{prod.numberOfPages}</p>
                 </div>
             </div>
             <div className={cx("price")}>
-                <h2>
-                    {prod.price + " USD"}
-                </h2>
-                <StoreButton variant="buy">
-                    <InlineIcon icon="bx:plus" />
-                    {"  Add to cart"}
-                </StoreButton>
+                <div className={cx("actions")}>
+                    <h2 contentEditable={isAdmin}>
+                        {prod.price}
+                    </h2>
+                    <h2>
+                        {"USD"}
+                    </h2>
+                </div>
+                <div className={cx("actions")}>
+                    <StoreButton variant="buy">
+                        {!isAdmin ?
+                        <>
+                            <InlineIcon icon="bx:plus" />
+                            {"  Add to cart"}
+                        </> : "Confirm changes"}
+                    </StoreButton>
+                    {isAdmin ?
+                        <StoreButton className={{[cx("archiveBtn")]: true}} variant="buy" >
+                            Archive
+                        </StoreButton>
+                    : null}
+                </div>
             </div>
         </div>
     )

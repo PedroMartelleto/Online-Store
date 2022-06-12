@@ -14,6 +14,7 @@ const cx = classNames.bind(styles)
 
 const ProductDetailPage = props => {
     const params = useParams()
+    const isAdmin = true // props.isAdmin
 
     if (!params.id) {
         return <NotFoundPage />
@@ -27,15 +28,15 @@ const ProductDetailPage = props => {
             <div className={cx("detailContainer")}>
                 <div className={cx("detailText")}>
                     <div className={cx("title")}>
-                        <h1> {prod.title}</h1>
-                        {prod.series ? <h3>{prod.series}</h3> : undefined}
-                        <h5>by <a className={cx("author")} href={prod.authorLink} target="_blank" rel="noreferrer"> {prod.author} </a></h5>
+                        <h1 contentEditable={isAdmin}> {prod.title}</h1>
+                        {prod.series ? <h3 contentEditable={isAdmin}>{prod.series}</h3> : undefined}
+                        <h5>by <a className={cx("author")} contentEditable={isAdmin} href={prod.authorLink} target="_blank" rel="noreferrer"> {prod.author} </a></h5>
                         <div className={cx("detailRating")}>
                             <StarRating star={prod.averageRating} />
                             <span>({prod.reviewCount} customer reviews)</span>
                         </div>
                     </div>
-                    <p>
+                    <p contentEditable={isAdmin}>
                         {prod.description}
                     </p>
                     <ProductInfo product={prod} />

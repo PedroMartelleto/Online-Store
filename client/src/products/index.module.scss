@@ -1,12 +1,20 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.homePage {
+    padding: 15px 32px 32px 32px;
+}
+
 .titleCont {
     display: flex;
     flex-direction: row;
     gap: 32px;
     margin-bottom: 32px;
     justify-content: space-between;
+}
+
+.titleCont > h3 {
+    font-weight: 600;
 }
 
 .leftMenu {

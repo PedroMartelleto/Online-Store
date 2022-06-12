@@ -10,6 +10,7 @@ import LoginSettingsPage from './auth/loginSettingsPage'
 import SignUpPage from './auth/signUpPage'
 import CartPage from "./cart/cartPage"
 import ManageUsers from "./manageUsers"
+import PrivateRoute from "./common/privateRoute"
 
 const App = () => {
 	return (
@@ -21,12 +22,13 @@ const App = () => {
 				<Route path="/products" element={<ProductsPage />} />
 				<Route path="/products/:id" element={<ProductDetailPage />} />
 				
-				<Route path="/manageUsers" element={<ManageUsers />} />
+				<Route path="/user/manageUsers" element={<ManageUsers />} />
 
 				<Route path="/login" element={<LoginPage />} />
-				<Route path="/user" element={<LoginSettingsPage />} />
 				<Route path="/signUp" element={<SignUpPage />} />
-				<Route path="/cart" element={<CartPage />} />
+			
+				<Route path="/user" element={<PrivateRoute Component={LoginSettingsPage} />} />
+				<Route path="/cart" element={<PrivateRoute Component={CartPage} />} />
 			</Routes>
 		</Router>
 	)
