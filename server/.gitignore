@@ -1,0 +1,5 @@
+node_modules/
+import/
+import/**/*
+package-lock.json
+.DS_Store

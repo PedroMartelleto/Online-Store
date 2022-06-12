@@ -5,6 +5,7 @@ import NavbarContainer from "../common/navbarContainer"
 import InputField from "./inputField"
 import StoreButton, { RightArrow } from "../common/storeButton"
 import ResponsiveRow from "../common/responsiveRow"
+import CoreBackend from "../backend/coreBackend"
 const cx = classNames.bind(styles)
 
 const LoginPage = props => {
@@ -21,7 +22,12 @@ const LoginPage = props => {
                 </div>
                 <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
                     <div className={cx("btns")}>
-                        <StoreButton className={{ [cx("submit")]: true }} variant="filled">
+                        <StoreButton className={{ [cx("submit")]: true }} variant="filled" onMouseDown={
+                            event => {
+                                event.preventDefault()
+                                CoreBackend.login(userData["Email address"], userData["Password"])
+                            }
+                        }>
                             Login
                         </StoreButton>
                         <div className={cx("btnsForgot")}>

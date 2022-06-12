@@ -1,4 +1,5 @@
 const router = require('express').Router()
+const { authorizeToken } = require('../tokenAuth')
 
 // http://localhost:5008/api/cart/
 

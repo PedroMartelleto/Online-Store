@@ -3,7 +3,7 @@ const { default: mongoose } = require("mongoose")
 const ProductSchema = new mongoose.Schema(
     {
         // Basic info
-        _id: { type: mongoose.Types.ObjectId, required: true, unique: true },
+        id: { type: mongoose.Types.ObjectId, required: true, unique: true },
         title: { type: String, required: true },
         link: { type: String, required: false },
         series: { type: String, required: false },

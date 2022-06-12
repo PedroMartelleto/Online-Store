@@ -4,8 +4,8 @@
 
 ## Functionalities
 
-- Private routes
-- 
+- Test backend
+- Deploy everything to heroku to avoid CORS issues
 
 ## Requirements
  - General Requirements
