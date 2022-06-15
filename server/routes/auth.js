@@ -3,42 +3,24 @@ const { User } = require('../dataModel')
 const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 
+const CryptoJS = require('crypto-js')
+
+
 function isValidString(str) {
     return typeof str === 'string' && str.trim().length > 0
 }
 
 // Register
 router.post('/register', async (req, res) => {
-    // Basic request validation
-    const b = req.body
-    const fieldsThatAreRequired = ['firstName', 'lastName', 'email', 'password', 'address', 'city', 'state', 'zip']
-    let missingField = false
-
-    for (const field of fieldsThatAreRequired) {
-        if (!isValidString(b[field])) {
-            missingField = true
-            break
-        }
-    }
-
-    if (missingField) {
-        res.status(400).send('Missing required fields.')
-    }
-
-    // Creates a new user if everything is valid
-    const newUser = new User({
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        // The password is AES encrypted
-        password: CryptoJS.AES.encrypt(req.body.password, process.env.PWD_SECRET_KEY).toString(),
-        email: req.body.email,
-        address: req.body.address,
-        city: req.body.city,
-        state: req.body.state,
-        zip: req.body.zip,
-    })
-
     try {
+        // Creates a new user if everything is valid
+        // changes the password to a hash
+        
+        let userObj = req.body
+        userObj.password = CryptoJS.AES.encrypt(req.body.password, process.env.PWD_SECRET_KEY).toString()
+
+        let newUser = new User(userObj)
+        newUser.cart = []
         const savedUser = await newUser.save()
         res.status(201).json(savedUser)
     }
@@ -54,13 +36,14 @@ router.post('/login', async (req, res) => {
         const user  = await User.findOne({ email: req.body.email })
         if (!user) {
             res.status(401).send('Invalid email or password.')
+            return
         }
 
-        // Encrypts the password and compares it to the encrypted password in the database
-        const hashedPassword = CryptoJS.AES.encrypt(req.body.password, process.env.PWD_SECRET_KEY).toString()
-        
-        if (user.password !== hashedPassword) {
+        const decryptedPassword = CryptoJS.AES.decrypt(user.password, process.env.PWD_SECRET_KEY).toString(CryptoJS.enc.Utf8)
+
+        if (decryptedPassword !== req.body.password) {
             res.status(401).send('Invalid email or password.')
+            return
         }
 
         const { password, ...userWithoutPassword } = user.toObject()

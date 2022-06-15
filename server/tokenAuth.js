@@ -5,7 +5,7 @@ const verifyJWTToken = (req, res, next) => {
     const authHeader = req.headers.token
 
     if (authHeader != null) {
-        jwt.verify(token.split(" ")[1], process.env.JWT_SECRET_KEY, (err, decodedToken) => {
+        jwt.verify(authHeader.split(" ")[1], process.env.JWT_SECRET_KEY, (err, decodedToken) => {
             if (err != null) {
                 res.status(403).json({ message: 'Invalid token.' })
             } else {
@@ -25,14 +25,14 @@ const authorizeJWTToken = (settings) => {
         verifyJWTToken(req, res, () => {
             const adminOnly = settings.adminOnly || false
 
-            if (adminOnly && req.user.admin) {
+            if (req.user.isAdmin) {
                 next() // Goes to router (continues running request)
             }
             else if (!adminOnly && req.user.id === req.params.id) {
                 next() // Goes to router (continues running request)
             }
             else {
-                req.status(403).send('Forbidden')
+                res.status(403).send('Forbidden')
             }
         })
     }

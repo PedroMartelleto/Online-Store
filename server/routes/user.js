@@ -5,17 +5,21 @@ const router = require('express').Router()
 
 // http://localhost:5008/api/user/
 
-// UPDATE /api/user/:id
+// PUT /api/user/:id
 router.put("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     if (req.body.password) {
         req.body.password = CryptoJS.AES.encrypt(req.body.password, process.env.PWD_SECRET_KEY).toString()
     }
 
     try {
-        const mergedUser = await User.findByIdAndUpdate(req.params.id, req.body, { 
-            $merge: req.body
-        }, { new: true }) // Returns the updated user
-        res.status(200).json(mergedUser)
+        let user = await User.findById(req.params.id)
+        if (!user) {
+            res.status(404).send('User not found.')
+            return
+        }
+        Object.assign(user, req.body)
+        await user.save()
+        res.status(200).json(user)
     }
     catch (err) {
         console.warn(err)
@@ -24,9 +28,14 @@ router.put("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
 })
 
 // DELETE /api/user/:id
-router.delete("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
+router.delete("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
-        await User.findByIdAndDelete(req.params.id)
+        let user = await User.findById(req.params.id)
+        if (!user) {
+            res.status(404).send('User not found.')
+            return
+        }
+        await user.remove()
         res.status(200).json("User deleted.")
     }
     catch (err) {
@@ -39,6 +48,10 @@ router.delete("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
 router.get("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
+        if (!user) {
+            res.status(404).send('User not found.')
+            return
+        }
         res.status(200).json(user)
     }
     catch (err) {

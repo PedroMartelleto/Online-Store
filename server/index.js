@@ -7,8 +7,6 @@ const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 var cors = require('cors');
 
-const uploadDBRoute = require('./routes/uploadDB')
-
 const app = express()
 
 dotenv.config()
@@ -20,6 +18,8 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 })
 
 app.use(cors({ origin: null }));
+app.use(express.json())
+
 
 // ! NOTE: Internal use - app.use("/api/uploadDB", uploadDBRoute)
 

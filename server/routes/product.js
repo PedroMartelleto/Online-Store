@@ -1,15 +1,13 @@
+const { Product } = require('../dataModel')
 const router = require('express').Router()
 const { authorizeToken } = require('../tokenAuth')
 
-// http://localhost:5008/api/product/
-
-// POST /api/product/:id (adds or updates a product)
-router.post("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
+// POST /api/product (adds a product)
+router.post("/", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {
-        await User.findByIdAndUpdate(req.params.id, req.body, { 
-            $merge: req.body
-        }, { new: true }) // Returns the updated user
-        res.status(200).json("Successfully updated product.")
+        const newProduct = new Product(req.body)
+        const savedProduct = await newProduct.save()
+        res.status(201).json(savedProduct)
     }
     catch (err) {
         console.warn(err)
@@ -17,8 +15,43 @@ router.post("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
     }
 })
 
+// PUT /api/product/:id (updates a product)
+router.put("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
+    try {
+        let product = await Product.findById(req.params.id)
+        if (!product) {
+            res.status(404).send('Product not found.')
+            return
+        }
+        Object.assign(product, req.body)
+        await product.save()
+        res.status(200).json(product)
+    }
+    catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
+// GET /api/product/:id
+router.get("/:id", async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id)
+        if (!product) {
+            res.status(404).send('Product not found.')
+            return
+        }
+        res.status(200).json(product)
+    }
+    catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
+
 // GET /api/product?genres=action&genres=adventure&sort=price&limit=10&skip=20&sortAsc=true
-router.get("/", authorizeToken({ adminOnly: true }), async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         // Safely figures out which queries were passed in
         const query = {}
@@ -54,10 +87,15 @@ router.get("/", authorizeToken({ adminOnly: true }), async (req, res) => {
 })
 
 // DELETE /api/product
-router.delete("/", authorizeToken({ adminOnly: true }), async (req, res) => {
+router.delete("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {
-        await Product.findByIdAndDelete(req.params.id)
-        res.status(201).json("Product deleted.")
+        const product = await Product.findById(req.params.id)
+        if (!product) {
+            res.status(404).send('Product not found.')
+            return
+        }
+        await product.remove()
+        res.status(200).json("Product deleted.")
     }
     catch (err) {
         console.warn(err)

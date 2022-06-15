@@ -3,7 +3,7 @@ const { default: mongoose } = require("mongoose")
 const ProductSchema = new mongoose.Schema(
     {
         // Basic info
-        id: { type: mongoose.Types.ObjectId, required: true, unique: true },
+        _id: { type: String },
         title: { type: String, required: true },
         link: { type: String, required: false },
         series: { type: String, required: false },
@@ -23,7 +23,7 @@ const ProductSchema = new mongoose.Schema(
         oneStarRatings: { type: Number, required: true },
         // Details
         numberOfPages: { type: Number, required: false },
-        datePublished: { type: Date, required: false },
+        datePublished: { type: String, required: false },
         publisher: { type: String, required: false },
         originalTitle: { type: String, required: false },
         genres: { type: String, required: false },
@@ -42,7 +42,7 @@ const ProductSchema = new mongoose.Schema(
         // Recommendations
         recommendedBooks: { type: String, required: false }
     },
-    { _id: false, timestamps: true }
+    { timestamps: true }
 )
 
 const UserSchema = new mongoose.Schema(
@@ -57,20 +57,13 @@ const UserSchema = new mongoose.Schema(
         state: { type: String, required: true },
         zip: { type: String, required: true },
         isAdmin: { type: Boolean, required: true, default: false },
-    }
-)
-
-const CartSchema = new mongoose.Schema(
-    {
-        userId: { type: mongoose.Types.ObjectId, required: true, unique: true },
-        products: [
+        cart: [
             {
-                productId: { type: String },
-                quantity: { type: Number, default: 1 }
+                productId: { type: String, ref: "Product" },
+                quantity: { type: Number, required: true }
             }
         ]
-    },
-    { timestamps: true }
+    }, {timestamps: true }
 )
 
 const OrderSchema = new mongoose.Schema(
@@ -91,8 +84,7 @@ const OrderSchema = new mongoose.Schema(
 )
 
 const User = mongoose.model("User", UserSchema)
-const Cart = mongoose.model("Cart", CartSchema)
 const Order = mongoose.model("Order", OrderSchema)
 const Product = mongoose.model("Product", ProductSchema)
 
-module.exports = { User, Cart, Order, Product }
+module.exports = { User, Order, Product }
