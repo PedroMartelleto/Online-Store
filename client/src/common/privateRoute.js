@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
 
-const PrivateRoute = (component) => {
-    const auth = false; //your logic
+const PrivateRoute = props => {
+    const auth = true
 
-    return auth ? <component /> : <Navigate to="/login" />
+    return auth ? (<div>{props.children}</div>) : <Navigate to="/login" />
 }
 
 export default PrivateRoute
