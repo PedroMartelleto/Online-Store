@@ -3,6 +3,7 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import NavbarContainer from "../common/navbar"
 import StoreButton from "../common/storeButton"
+import { ROUTES } from "../App"
 const cx = classNames.bind(styles)
 
 const ManageUsers = props => {
@@ -28,7 +29,7 @@ const ManageUsers = props => {
                     <StoreButton
                         className={{ [cx("createAccount")]: true }}
                         variant="outlined"
-                        onMouseDown={event => document.location.href = "/signUp"}
+                        onMouseDown={event => document.location.href = ROUTES.signUp}
                     >
                         Create account
                     </StoreButton>

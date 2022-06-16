@@ -57,13 +57,14 @@ const UserSchema = new mongoose.Schema(
         state: { type: String, required: true },
         zip: { type: String, required: true },
         isAdmin: { type: Boolean, required: true, default: false },
+        phoneNumber: { type: String, required: true },
         cart: [
             {
                 productId: { type: String, ref: "Product" },
                 quantity: { type: Number, required: true }
             }
         ]
-    }, {timestamps: true }
+    }, { timestamps: true }
 )
 
 const OrderSchema = new mongoose.Schema(

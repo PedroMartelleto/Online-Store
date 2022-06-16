@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { useParams } from "react-router"
 import ResponsiveRow from "../common/responsiveRow"
 import StoreButton, { RightArrow } from "../common/storeButton"
@@ -10,11 +10,12 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Link } from "react-router-dom"
 import NavbarContainer from "../common/navbarContainer"
+import { AuthContext } from "../api"
 const cx = classNames.bind(styles)
 
 const ProductDetailPage = props => {
     const params = useParams()
-    const isAdmin = true // props.isAdmin
+    const { isAdmin } = useContext(AuthContext)
 
     if (!params.id) {
         return <NotFoundPage />

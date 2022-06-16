@@ -1,9 +1,10 @@
-import React from "react"
+import React, { useContext } from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Icon } from "@iconify/react"
 import StoreButton from "../common/storeButton"
 import { Link } from "react-router-dom"
+import { AuthContext } from "../api"
 const cx = classNames.bind(styles)
 
 /*
@@ -113,7 +114,7 @@ const StarRating = props => {
 
 const ProductCard = props => {
     const prod = props.product
-    const isAdmin = true // props.isAdmin
+    const { isAdmin } = useContext(AuthContext)
 
     return (
         <Link className={cx("prodLink")} to={`/products/${prod.id}`}>

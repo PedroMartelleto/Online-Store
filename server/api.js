@@ -5,7 +5,7 @@ const { User, Product } = require('./dataModel')
 const register = async (user, admin = false) => {
     let response = await axios.post('http://localhost:8080/api/auth/register', user)
     if (admin) {
-        try{
+        try {
             await User.findOneAndUpdate({ email: user.email }, { isAdmin: true })
         } catch (err) {
             console.warn(err)

@@ -3,8 +3,6 @@ const { authorizeToken } = require('../tokenAuth')
 
 const router = require('express').Router()
 
-// http://localhost:5008/api/user/
-
 // PUT /api/user/:id
 router.put("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     if (req.body.password) {

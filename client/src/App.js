@@ -10,28 +10,43 @@ import LoginSettingsPage from './auth/loginSettingsPage'
 import SignUpPage from './auth/signUpPage'
 import CartPage from "./cart/cartPage"
 import ManageUsers from "./manageUsers"
-import PrivateRoute from "./common/privateRoute"
+import { PrivateRoute, AdminRoute } from "./common/privateRoute"
+import { AuthProvider } from "./api"
+
+const ROUTES = {
+	home: "/",
+	products: "/products",
+	productDetail: "/products/:id",
+	newProduct: "/products/new",
+	login: "/login",
+	signUp: "/signUp",
+	userSettings: "/user/settings",
+	userCart: "/user/cart",
+	manageUsers: "/admin/manageUsers"
+}
 
 const App = () => {
 	return (
-		<Router>
-			<Routes>
-				<Route path="*" element={<NotFoundPage />} />
-	
-				<Route path="/" element={<HomePage />} />
-				<Route path="/products" element={<ProductsPage />} />
-				<Route path="/products/:id" element={<ProductDetailPage />} />
-				
-				<Route path="/user/manageUsers" element={<ManageUsers />} />
+		<AuthProvider>
+			<Router>
+				<Routes>
+					<Route path="*" element={<NotFoundPage />} />
+		
+					<Route path={ROUTES.home} element={<HomePage />} />
+					<Route path={ROUTES.products} element={<ProductsPage />} />
+					<Route path={ROUTES.productDetail} element={<ProductDetailPage />} />
+					
+					<Route path={ROUTES.manageUsers} element={<AdminRoute><ManageUsers/></AdminRoute>} />
 
-				<Route path="/login" element={<LoginPage />} />
-				<Route path="/signUp" element={<SignUpPage />} />
-			
-				<Route path="/user" element={<PrivateRoute><LoginSettingsPage /></PrivateRoute>} />} />
-				<Route path="/cart" element={<PrivateRoute><CartPage /></PrivateRoute>} />} />
-			</Routes>
-		</Router>
+					<Route path={ROUTES.login} element={<LoginPage />} />
+					<Route path={ROUTES.signUp} element={<SignUpPage />} />
+				
+					<Route path={ROUTES.userSettings} element={<PrivateRoute><LoginSettingsPage/></PrivateRoute>} />
+					<Route path={ROUTES.userCart} element={<PrivateRoute><CartPage/></PrivateRoute>} />
+				</Routes>
+			</Router>
+		</AuthProvider>
 	)
 }
 
-export default App
+export { App as default, ROUTES }

@@ -1,9 +1,18 @@
+import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import { AuthContext } from '../api';
+import { ROUTES } from '../App';
 
 const PrivateRoute = props => {
-    const auth = true
+    const { authenticated } = useContext(AuthContext)
 
-    return auth ? (<div>{props.children}</div>) : <Navigate to="/login" />
+    return authenticated ? (<div>{props.children}</div>) : <Navigate to={ROUTES.login} />
 }
 
-export default PrivateRoute
+const AdminRoute = props => {
+    const { authenticated, isAdmin } = useContext(AuthContext)
+
+    return authenticated && isAdmin ? (<div>{props.children}</div>) : <Navigate to={ROUTES.login} />
+}
+
+export { PrivateRoute, AdminRoute }

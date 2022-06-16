@@ -15,7 +15,7 @@ const verifyJWTToken = (req, res, next) => {
         })
     }
     else {
-        return res.status(401).send('Unauthorized')
+        return res.status(403).send('Unauthorized')
     }
 }
 

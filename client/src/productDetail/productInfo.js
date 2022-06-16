@@ -1,14 +1,15 @@
 import { InlineIcon } from "@iconify/react"
-import React from "react"
+import React, { useContext } from "react"
 import StoreButton from "../common/storeButton"
 
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
+import Api, { AuthContext } from "../api"
 const cx = classNames.bind(styles)
 
 const ProductInfo = props => {
     const prod = props.product
-    const isAdmin = true // props.isAdmin
+    const { isAdmin, authToken } = useContext(AuthContext)
 
     return (
         <div className={cx("prodInfo")}>
@@ -36,7 +37,7 @@ const ProductInfo = props => {
                     </h2>
                 </div>
                 <div className={cx("actions")}>
-                    <StoreButton variant="buy">
+                    <StoreButton variant="buy" onMouseDown={event => Api.addProductToCart(authToken._id, prod.id) }>
                         {!isAdmin ?
                         <>
                             <InlineIcon icon="bx:plus" />

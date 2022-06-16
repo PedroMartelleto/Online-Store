@@ -3,6 +3,7 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Link } from "react-router-dom"
 import StoreButton, { RightArrow } from "./storeButton"
+import { ROUTES } from "../App"
 const cx = classNames.bind(styles)
 
 const CategoriesText = props => {
@@ -19,7 +20,7 @@ const CategoriesText = props => {
                 )
             })}
             {props.button ?
-            <StoreButton className={{ "categoryBtn": true }} variant="secondary" onMouseDown={event => window.location.href = "/products"}>
+            <StoreButton className={{ "categoryBtn": true }} variant="secondary" onMouseDown={event => window.location.href = ROUTES.products}>
                 {props.button + "  "}
                 <RightArrow />
             </StoreButton> : undefined}

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
@@ -7,6 +7,8 @@ import ResponsiveRow from "../common/responsiveRow"
 import CategoriesText from "../common/categoriesText"
 import NavbarContainer from "../common/navbarContainer"
 import StoreButton, { RightArrow } from "../common/storeButton"
+import { AuthContext } from "../api"
+import { ROUTES } from "../App"
 const cx = classNames.bind(styles)
 
 // MARK: - Functions used to keep track of the stars filters
@@ -40,7 +42,7 @@ const StarsCheckbox = props => {
 const ProductsPage = props => {
     const [ starsAllowed, setStarsAllowed ] = useState(new Set([1, 2, 3, 4, 5]))
     const filters = []
-    const isAdmin = true // props.isAdmin
+    const { isAdmin } = useContext(AuthContext)
 
     return (
         <>
@@ -49,7 +51,7 @@ const ProductsPage = props => {
                 <div className={cx("titleCont")}>
                     <h1>Fiction</h1>
                     {isAdmin ? 
-                        <StoreButton variant="filled" onMouseDown={event => window.location.href = "/products/new"} >
+                        <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
                             {"Add a New Book "}<RightArrow color="white" />
                         </StoreButton>
                     : undefined}

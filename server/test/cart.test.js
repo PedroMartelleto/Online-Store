@@ -34,8 +34,8 @@ test("an user interacting with their own cart", async () => {
     let token = (await api.login(user2)).data.accessToken
 
     let cart = [
-        {productId: productId1, quantity: 1},
-        {productId: productId2, quantity: 5}
+        { productId: productId1, quantity: 1 },
+        { productId: productId2, quantity: 5 }
     ]
 
     let addResponse = await api.editCart(token, userId, cart)

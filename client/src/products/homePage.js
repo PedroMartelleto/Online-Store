@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import CategoriesText from "../common/categoriesText"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
@@ -6,10 +6,12 @@ import ProductCard, { TestProduct } from "./productCard"
 import ResponsiveRow from "../common/responsiveRow"
 import NavbarContainer from "../common/navbarContainer"
 import StoreButton, { RightArrow } from "../common/storeButton"
+import { AuthContext } from "../api"
+import { ROUTES } from "../App"
 const cx = classNames.bind(styles)
 
 const HomePage = props => {
-    const isAdmin = true //props.isAdmin
+    const { isAdmin } = useContext(AuthContext)
 
     return (
         <>
@@ -18,7 +20,7 @@ const HomePage = props => {
                 <div className={cx("titleCont")}>
                         <h3>Welcome, Pedro!</h3>
                         {isAdmin ? 
-                            <StoreButton variant="filled" onMouseDown={event => window.location.href = "/products/new"} >
+                            <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
                                 {"Add a New Book "}<RightArrow color="white" />
                             </StoreButton>
                         : undefined}

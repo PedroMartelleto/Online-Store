@@ -5,7 +5,7 @@ const express = require('express')
 const debug = require('debug')('server')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-var cors = require('cors');
+const cors = require('cors');
 
 const app = express()
 
@@ -17,7 +17,7 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log("Error: ", err.message)
 })
 
-app.use(cors({ origin: null }));
+app.use(cors({ origin: "http://localhost:3000" }))
 app.use(express.json())
 
 

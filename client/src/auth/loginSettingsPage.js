@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import NavbarContainer from "../common/navbarContainer"
@@ -6,14 +6,19 @@ import StoreButton from "../common/storeButton"
 import InputField from "./inputField"
 import ResponsiveRow from "../common/responsiveRow"
 import Payment from "./payment"
+import { AuthContext } from "../api"
+import ObjectRenamer from "../api/objectRenamer"
+import { ROUTES } from "../App"
 
 const cx = classNames.bind(styles)
 
 const LoginSettingsPage = props => {
-    const [userData, setUserData] = useState({})
-    const [cardData, setCardData] = useState({})
+    const { isAdmin, authToken } = useContext(AuthContext)
 
-    const isAdmin = true//props.isAdmin
+    const [ userData, setUserData ] = useState(ObjectRenamer.fromBackend(authToken))
+    const [ cardData, setCardData ] = useState({})
+
+    // TODO: Enable save settings only when edited & validate fields
 
     return (
         <>
@@ -44,7 +49,7 @@ const LoginSettingsPage = props => {
                     {isAdmin ? 
                     <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
                         <InputField label="Admin list (emails)" userData={userData} setUserData={setUserData} />
-                        <StoreButton className={{ [cx("submit")]: true }} variant="outlined" onMouseDown={event => window.location.href = "/user/manageUsers"}>
+                        <StoreButton className={{ [cx("submit")]: true }} variant="outlined" onMouseDown={event => window.location.href = ROUTES.manageUsers}>
                             Manage Users
                         </StoreButton>
                     </ResponsiveRow>

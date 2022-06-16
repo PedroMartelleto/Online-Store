@@ -1,19 +1,25 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import NavbarContainer from "../common/navbarContainer"
 import InputField from "./inputField"
 import ResponsiveRow from "../common/responsiveRow"
 import StoreButton from "../common/storeButton"
-import Payment from "./payment"
 import CheckBox from "../common/checkBox"
+import { AuthContext } from "../api"
+import { Navigate } from "react-router"
+import { ROUTES } from "../App"
 
 const cx = classNames.bind(styles)
 
 const SignUpPage = props => {
-    const [userData, setUserData] = useState({})
-    const [cardData, setCardData] = useState({})
-    const [agreeToTerms, setAgreeToTerms] = useState(false)
+    const [ userData, setUserData ] = useState({})
+    const [ agreeToTerms, setAgreeToTerms ] = useState(false)
+    const { register, authenticated } = useContext(AuthContext)
+
+    if (authenticated) {
+        return <Navigate to={ROUTES.home} />
+    }
 
     return (
         <>
@@ -40,15 +46,10 @@ const SignUpPage = props => {
                         <InputField label="State" userData={userData} setUserData={setUserData} />
                         <InputField label="ZIP/Postal code" userData={userData} setUserData={setUserData} />
                     </ResponsiveRow>
-
-                    <h3 className={cx("paymentTitle")}>
-                        Payment method
-                    </h3>
-                    <div className="caption">
-                        Please enter your payment method
-                    </div>
-
-                    <Payment cardData={cardData} setCardData={setCardData} />
+                    <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
+                        <InputField type="password" label="Password" userData={userData} setUserData={setUserData} />
+                        <InputField type="password" label="Confirm Password" userData={userData} setUserData={setUserData} />
+                    </ResponsiveRow>
 
                     <h3 className={cx("paymentTitle")}>
                         Confirmation
@@ -61,7 +62,8 @@ const SignUpPage = props => {
                         setValue={setAgreeToTerms}
                     />
 
-                    <StoreButton disabled={!agreeToTerms} className={{ [cx("submit")]: true }} variant="buy">
+                    <StoreButton disabled={!agreeToTerms} className={{ [cx("submit")]: true }} variant="buy"
+                                onMouseDown={event => register(userData)}>
                         Create account
                     </StoreButton>
                 </form>

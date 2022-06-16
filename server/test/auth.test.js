@@ -2,9 +2,22 @@ const { User } = require('../dataModel')
 const testutils = require('./testutils')
 const api = require('../api') 
 
-const user1 = {firstName: "usuario", lastName: "primeiro", email: "email1@email.com", password: "password", address: "address1", city: "city1", state: "state1", zip: "11111-1"}
-const user2 = {firstName: "usuario", lastName: "segundo", email: "email2@email.com", password: "password", address: "address2", city: "city2", state: "state2", zip: "22222-2"}
-const empty_user = {firstName: "", lastName: "", email: "", password: "", address: "", city: "", state: "", zip: ""}
+const user1 = {
+    firstName: "usuario", lastName: "primeiro", email: "email1@email.com",
+    password: "password", address: "address1", city: "city1", state: "state1", zip: "11111-1",
+    phoneNumber: "123456789"
+}
+const user2 = {
+    firstName: "usuario", lastName: "segundo", email: "email2@email.com",
+    password: "password", address: "address2", city: "city2", state: "state2", zip: "22222-2",
+    phoneNumber: "123456789"
+}
+
+const emptyUser = {
+    firstName: "", lastName: "", email: "", password: "", address: "", city: "",
+    state: "", zip: "", phoneNumber: ""
+}
+
 beforeEach(testutils.init)
 afterEach(testutils.clean)
 
@@ -52,7 +65,7 @@ test("empty user creation", async () => {
 
     // Checks that the user is not created if there are missing fields
     try {
-        await api.register(empty_user)
+        await api.register(emptyUser)
     } catch (err) {
         expect(err.response.status).toBe(500)
     }
@@ -87,7 +100,7 @@ test("invalid login", async () => {
 
     // Tries to login with the wrong credentials
     try{
-        await api.login({"email":user1.email, "password":"wrong password"})
+        await api.login({ "email": user1.email, "password": "wrong password" })
     } catch (err) {
         expect(err.response.status).toBe(401)
     }
