@@ -3,6 +3,7 @@
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import Levenshtein
 
 books = pd.read_csv("raw.csv")
 
@@ -78,4 +79,41 @@ inv_map = {v: k for k, v in genre_count.items()}
 print(list(reversed(dict(sorted(inv_map.items())).values())))
 books.drop(columns=['genreAndVotes'], inplace=True)
 
-books.to_csv("processed.csv", index=False, encoding="utf-8")
+def filter_rows(row, original_idx) -> pd.Series:
+   
+
+    # If we didn't return yet, just return the default
+    return row
+
+
+# Apply the function (this will create a new column called "remove", indicating if a row should be removed)
+
+books['remove'] = False
+
+for original_idx, row in tqdm(books.iterrows(), total=books.shape[0]):
+    if row['remove']: continue
+
+    potential_removes = []
+
+    for idx, other_row in books.iterrows():
+        if Levenshtein.ratio(row['title'], other_row['title']) >= 0.94:
+            potential_removes.append(idx)
+    
+    if len(potential_removes) <= 0: continue
+
+    idx_to_keep = 0
+    biggest_rating = 0
+
+    for i in potential_removes:
+        if books['ratingCount'].iloc[i] > biggest_rating:
+            biggest_rating = books['ratingCount'].iloc[i]
+            idx_to_keep = i
+
+    for i in potential_removes:
+        if idx_to_keep != i:
+            books.at[i, 'remove'] = True
+
+# Remove the rows that have the remove indication, and drop the column
+books = books.loc[~books["remove"]].drop(columns=["remove"])
+
+books.to_csv("processed_no_dups.csv", index=False, encoding="utf-8")

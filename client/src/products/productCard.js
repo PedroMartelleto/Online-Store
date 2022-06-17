@@ -117,7 +117,7 @@ const ProductCard = props => {
     const { isAdmin } = useContext(AuthContext)
 
     return (
-        <Link className={cx("prodLink")} to={`/products/${prod.id}`}>
+        <Link className={cx("prodLink")} to={`/products/${prod._id}`}>
             <div className={cx({
                 "productCard": true,
                 "cardBorder": props.border
@@ -127,7 +127,7 @@ const ProductCard = props => {
                 </div>
                 <h5 style={{fontWeight: 500}}>{prod.title}</h5>
                 <h6>{prod.author}</h6>
-                <StarRating star={prod.averageRating} />
+                <StarRating star={Math.round(prod.averageRating * 10) / 10} />
                 <div className={cx("productCardTail")}>
                     <h4 style={{fontWeight: 600}}>
                         {prod.price + " USD"}

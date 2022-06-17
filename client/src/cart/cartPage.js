@@ -78,7 +78,7 @@ const CartPage = props => {
                     cartProducts.push(cartProd.product)
                     cartQuantities.push(cartProd.quantity)
                 }
-                console.log(cart)
+
                 setProducts(cartProducts)
                 setQuantities(cartProducts)
             }
@@ -126,7 +126,7 @@ const CartPage = props => {
                         products.map((prod, index) => {
                             return (
                                 <ProductSummary
-                                    key={"prod-" + prod.id + "-" + index}
+                                    key={"prod-" + prod + "-" + index}
                                     index={index}
                                     product={prod}
                                     quantity={quantities[index]}

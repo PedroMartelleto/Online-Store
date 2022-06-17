@@ -15,6 +15,21 @@ router.post("/", authorizeToken({ adminOnly: true }), async (req, res) => {
     }
 })
 
+// POST /api/product/batch (adds a list of products)
+router.post("/batch", authorizeToken({ adminOnly: true }), async (req, res) => {
+    try {
+        for (const prod of req.body.products) {
+            const newProduct = new Product(prod)
+            await newProduct.save()
+        }
+        res.status(201).json("Sucessfully added the products.")
+    }
+    catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
 // PUT /api/product/:id (updates a product)
 router.put("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {

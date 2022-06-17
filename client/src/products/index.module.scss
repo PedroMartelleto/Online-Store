@@ -5,6 +5,11 @@
     padding: 15px 32px 32px 32px;
 }
 
+.leftAligned {
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+}
+
 .titleCont {
     display: flex;
     flex-direction: row;
@@ -46,6 +51,20 @@
     font-size: f.$scale6;
     font-weight: 600;
     padding-top: 48px;
+}
+
+.productCard > h5 {
+    max-width: 180px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.productCard > h6 {
+    max-width: 180px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .categories {
@@ -101,6 +120,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     margin: 4px;
+    max-width: 300px;
 }
 
 .productCard:hover {

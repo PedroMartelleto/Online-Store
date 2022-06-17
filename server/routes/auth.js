@@ -5,19 +5,16 @@ const jwt = require('jsonwebtoken')
 
 const CryptoJS = require('crypto-js')
 
-
-function isValidString(str) {
-    return typeof str === 'string' && str.trim().length > 0
-}
-
 // Register
 router.post('/register', async (req, res) => {
     try {
         // Creates a new user if everything is valid
         // changes the password to a hash
-        
+
         let userObj = req.body
-        userObj.password = CryptoJS.AES.encrypt(req.body.password, process.env.PWD_SECRET_KEY).toString()
+
+        userObj.password = CryptoJS.AES.encrypt(userObj.password, process.env.PWD_SECRET_KEY).toString()
+        userObj.isAdmin = false
 
         let newUser = new User(userObj)
         newUser.cart = []

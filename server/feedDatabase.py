@@ -1,29 +1,47 @@
+import time
 import pandas as pd
 import requests
 import json
 import sys
 from tqdm import tqdm
 
-def camelCase(s):
-    return ''.join(word.title() if i else word for i, word in enumerate(s.split('_')))
-
-df = pd.read_csv('goodreads_books.csv')
+df = pd.read_csv('import/processed.csv')
 df.drop_duplicates(inplace=True)
 df.reset_index(drop=True, inplace=True)
 df = df.replace(float('nan'), '')
 df = df.rename(columns={'id': '_id'})
-df['price'] = 1
-df['quantity'] = 1
-df.columns = [camelCase(col) for col in df.columns]
 
+assert df['_id'].nunique() == df.shape[0]
 
 authenticationData = {'email': sys.argv[1], 'password': sys.argv[2]}
-token = requests.post('http://127.0.0.1:8080/api/auth/login', data=json.dumps(authenticationData), headers={'content-type': 'application/json'}).json()['accessToken']
+token = requests.post('http://localhost:3333/api/auth/login',
+                      data=json.dumps(authenticationData),
+                      headers={'Content-Type': 'application/json'})
+print(token, token.content)
+token = token.json()['accessToken']
 
-def postBook(book):
-    url = 'http://127.0.0.1:8080/api/product/'
-    headers = {'content-type': 'application/json', 'Token': 'Bearer ' + token}
-    r = requests.post(url, data=json.dumps(book), headers=headers)
+products = []
 
 for index, row in tqdm(df.iterrows()):
-    postBook(row.to_dict())
+    products.append(row.to_dict())
+
+url = 'http://localhost:3333/api/product/batch/'
+headers = {'content-type': 'application/json', 'Token': 'Bearer ' + token}
+
+print("Making request...")
+
+# Splits the products list into 2000-element chunks
+frags = []
+last_i = 0
+chk = 2000
+for i in range(0, len(products), chk):
+    frags.append(products[i:i+chk if i+chk <= len(products) else len(products)])
+
+for frag in tqdm(frags):
+    dataToSend = json.dumps({ "products": frag })
+    print(len(dataToSend)/1000/1000, "MB")
+
+    r = requests.post(url, data=dataToSend, headers=headers)
+    print(r)
+
+    assert r.status_code == 201

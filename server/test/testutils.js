@@ -37,7 +37,7 @@ const verifyDatabaseUser = async (user, checkPasswordDoesntMatch = true) => {
 
 
 const verifyDatabaseProduct = async (product) => {
-    let productDB = await Product.findOne({ id: product.id })
+    let productDB = await Product.findOne({ id: product._id })
 
     if (productDB) {
         expect(productDB.title).toBe(product.title)

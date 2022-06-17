@@ -78,7 +78,7 @@ const ProductsPage = props => {
                                 })}
                             </div>
                         </div>
-                        <ResponsiveRow>
+                        <ResponsiveRow classNames={{[cx("leftAligned")]: true}}>
                             <ProductCard
                                 border={true}
                                 product={TestProduct}

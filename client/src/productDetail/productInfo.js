@@ -37,7 +37,7 @@ const ProductInfo = props => {
                     </h2>
                 </div>
                 <div className={cx("actions")}>
-                    <StoreButton variant="buy" onMouseDown={event => Api.addProductToCart(authToken._id, prod.id) }>
+                    <StoreButton variant="buy" onMouseDown={event => Api.addProductToCart(authToken._id, prod._id) }>
                         {!isAdmin ?
                         <>
                             <InlineIcon icon="bx:plus" />

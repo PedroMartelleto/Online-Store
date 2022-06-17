@@ -6,8 +6,9 @@ import styles from "./navbar.module.scss"
 import { Icon } from "@iconify/react"
 import classNames from "classnames/bind"
 import { AuthContext } from "../api"
-import { Navigate } from "react-router"
+import { Navigate, useLocation } from "react-router"
 import { ROUTES } from "../App"
+import StoreButton from "./storeButton"
 const cx = classNames.bind(styles)
 
 const NavbarButton = (props) => {
@@ -24,6 +25,7 @@ const Navbar = (props) => {
     const [ navToSettings, setNavToSettings ] = useState(false)
     const [ navToCart, setNavToCart ] = useState(false)
     const [ navToCreateProduct, setNavToCreateProduct ] = useState(false)
+    const location = useLocation()
 
     // TODO: Fix icons in this page
 
@@ -48,8 +50,17 @@ const Navbar = (props) => {
                 />
                 <SearchBar/>
                 <div className={cx("btnsContainer")}>
-                    {authenticated ? <NavbarButton icon="bx:user" onMouseDown={event => setNavToSettings(true)} /> : "Login" }
-                    {isAdmin ? null : <NavbarButton icon="bx:cart" onMouseDown={event => setNavToCart(true)} />}
+                    {authenticated ? <>
+                        <NavbarButton icon="bx:user" onMouseDown={event => setNavToSettings(true)} />
+                        {isAdmin ? null : <NavbarButton icon="bx:cart" onMouseDown={event => setNavToCart(true)} />}
+                    </> : <StoreButton disabled={location.pathname === ROUTES.login} onMouseDown={event => {
+                        if (location.pathname !== ROUTES.login) {
+                            window.location.href = ROUTES.login
+                        }
+                    }}>
+                            Login
+                        </StoreButton>
+                    }
                 </div>
             </div>
             <CategoriesBar categories={["Fiction", "Psychology", "Horror", "Science Fiction", "Humor", "Apocalyptic"]} />

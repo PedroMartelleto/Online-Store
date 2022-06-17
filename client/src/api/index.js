@@ -81,11 +81,40 @@ const AuthProvider = ({ children }) => {
     )
 }
 
+const encodeDataToURL = (data) => {
+    const url = []
+
+    for (const key of Object.keys(data)) {
+        if (data[key] != null) {
+            url.push(encodeURIComponent(data[key]))
+        }
+    }
+
+    return url.join("&")
+}
+
 class Api {
     static defaults = {
         headers: {
             'Access-Control-Allow-Origin': 'http://localhost:3000',
             'Access-Control-Allow-Credentials': 'true'
+        }
+    }
+
+    static async getProductsBatch(genres, sort, limit, skip, sortAsc) {
+        limit = limit || 10
+        skip = skip || 0
+
+        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, sort, limit, skip, sortAsc })
+        const response = await axios.get(queryURL, Api.defaults)
+
+        console.log(response)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            return null
         }
     }
 

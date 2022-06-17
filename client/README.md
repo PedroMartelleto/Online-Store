@@ -4,7 +4,14 @@
 
 ## Functionalities
 
-- Test backend
+- Remove duplicate titles (>0.99 similarity) from DB.
+
+- Better Navbar
+
+- Filtering and product lists
+
+- Number of items in cart
+
 - Deploy everything to heroku to avoid CORS issues
 
 ## Requirements

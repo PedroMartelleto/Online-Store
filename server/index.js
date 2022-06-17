@@ -6,6 +6,7 @@ const debug = require('debug')('server')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const cors = require('cors');
+const bodyParser = require('body-parser')
 
 const app = express()
 
@@ -17,14 +18,13 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
     console.log("Error: ", err.message)
 })
 
-app.use(cors({ origin: "http://localhost:3000" }))
+app.use(cors())
 app.use(express.json())
 
-
-// ! NOTE: Internal use - app.use("/api/uploadDB", uploadDBRoute)
+// ! app.use("/api/INTERNAL_USE", require('./routes/internalUse'))
 
 // API Endpoints
-app.use("/api/order", require('./routes/order'))
+// ! app.use("/api/order", require('./routes/order'))
 app.use("/api/product", require('./routes/product'))
 app.use("/api/user", require('./routes/user'))
 app.use("/api/cart", require('./routes/cart'))
