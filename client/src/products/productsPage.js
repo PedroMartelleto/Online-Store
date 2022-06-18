@@ -31,22 +31,21 @@ const ProductsPage = props => {
     let page = searchParams.get('page') || 1
     page = Number(page)
 
-    const skip = page * limit
-    console.log(skip)
+    const skip = (page-1) * limit
     const sortAsc = true
 
     useEffect(() => {
         (async () => {
             const genres = ['Fiction']
-            const products = await Api.getProductsBatch(genres, sort, limit, skip, sortAsc)
+            const products = await Api.getProductsBatch(genres, sort, limit, skip, sortAsc, minRating, maxRating)
 
             if (products) {
                 setProducts(products)
             }
         })()
-    }, [setProducts, sort, limit, skip, sortAsc, page])
+    }, [setProducts, sort, limit, skip, sortAsc, page, minRating, maxRating ])
 
-    if (page > 4) {
+    if (page > 4 || page <= 0) {
         return <NotFoundPage />
     }
 

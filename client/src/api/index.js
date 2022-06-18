@@ -86,7 +86,7 @@ const encodeDataToURL = (data) => {
 
     for (const key of Object.keys(data)) {
         if (data[key] != null) {
-            url.push(encodeURIComponent(data[key]))
+            url.push(key + "=" + encodeURIComponent(data[key]))
         }
     }
 
@@ -101,13 +101,13 @@ class Api {
         }
     }
 
-    static async getProductsBatch(genres, sort, limit, skip, sortAsc) {
+    static async getProductsBatch(genres, sort, limit, skip, sortAsc, minRating, maxRating) {
         limit = limit || 10
         skip = skip || 0
 
-        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, sort, limit, skip, sortAsc })
+        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, sort, limit, skip, sortAsc, minRating, maxRating })
         const response = await axios.get(queryURL, Api.defaults)
-
+        console.log("Query", queryURL)
         if (response.status === 200) {
             return response.data
         }

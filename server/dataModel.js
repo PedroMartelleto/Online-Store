@@ -26,7 +26,7 @@ const ProductSchema = new mongoose.Schema(
         datePublished: { type: String, required: false },
         publisher: { type: String, required: false },
         originalTitle: { type: String, required: false },
-        genres: { type: String, required: false },
+        genres: { type: Array, required: false },
         // Other types of ID
         isbn: { type: String, required: false },
         isbn13: { type: String, required: false },

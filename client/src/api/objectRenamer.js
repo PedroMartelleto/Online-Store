@@ -4,7 +4,9 @@ function reverseObject(obj) {
     for (const key of Object.keys(obj)) {
         newObj[obj[key]] = key
 
-        if (newObj[key] instanceof Array || newObj[key] instanceof String) {
+        const el = newObj[key]
+
+        if (Array.isArray(el) || el instanceof String || typeof el === 'string') {
             newObj[key] = newObj[key].slice(0)
         }
     }
@@ -21,7 +23,7 @@ function renameObject(obj, renameMap) {
         if (renameMap[fieldName]) {
             let value = newObj[fieldName]
 
-            if (value instanceof Array || value instanceof String) {
+            if (Array.isArray(value) || value instanceof String || typeof value === 'string') {
                 value = value.slice(0)
             }
 

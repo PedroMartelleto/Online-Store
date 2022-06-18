@@ -69,10 +69,18 @@ router.get("/:id", async (req, res) => {
 router.get("/", async (req, res) => {
     try {
         // Safely figures out which queries were passed in
-        const query = {}
+        const dbQuery = {}
 
         if (req.query.genres != null) {
-            query.genres = { $in: req.query.genres.split(",") }
+            // Mongodb query for any element in the array is inside req.query.genres
+            if (Array.isArray(req.query.genres)) {
+                dbQuery.genres = { $in: req.query.genres }
+            }
+            else if (typeof req.query.genres === 'string' || req.query.genres instanceof String) {
+                dbQuery.genres = req.query.genres
+            } else {
+                console.log("Invalid genres passed to query:", req.query.genres, typeof req.query.genres)
+            }
         }
 
         const limit = req.query.limit != null ? Math.min(parseInt(req.query.limit), 15) : 9
@@ -80,15 +88,16 @@ router.get("/", async (req, res) => {
         const sort = {}
 
         if (req.query.minRating != null || req.query.maxRating != null) {
-            query.averageRating = {}
+            dbQuery.averageRating = {}
         }
 
         // Enables filtering by average rating
         if (req.query.minRating != null) {
-            query.averageRating = {
-                $gte: parseFloat(req.query.minRating),
-                $lte: parseFloat(req.query.maxRating)
-            }
+            dbQuery.averageRating.$gte = parseFloat(req.query.minRating)
+        }
+
+        if (req.query.maxRating != null) {
+            dbQuery.averageRating.$lte = parseFloat(req.query.maxRating)
         }
 
         if (req.query.sort != null) {
@@ -99,7 +108,7 @@ router.get("/", async (req, res) => {
         }
 
         // Finds all products according to the query
-        const products = await Product.find(query)
+        const products = await Product.find(dbQuery)
             .sort(sort)
             .skip(skip)
             .limit(limit)
