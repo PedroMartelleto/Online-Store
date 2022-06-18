@@ -4,15 +4,15 @@
 
 ## Functionalities
 
-- Fix query params (products page), filtering
-
-- Query search term
-
-- Better Navbar (Login, Logout, settings clearer)
+- Fix cart
 
 - Number of items in cart
 
+- Better Navbar (Login, Logout, settings clearer)
+
 - Deploy everything to heroku to avoid CORS issues
+
+- Reupload DB (fix genres to be an array)
 
 ## Requirements
  - General Requirements
