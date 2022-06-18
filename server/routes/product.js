@@ -79,6 +79,18 @@ router.get("/", async (req, res) => {
         const skip = req.query.skip != null ? Math.min(parseInt(req.query.skip), 100) : 0
         const sort = {}
 
+        if (req.query.minRating != null || req.query.maxRating != null) {
+            query.averageRating = {}
+        }
+
+        // Enables filtering by average rating
+        if (req.query.minRating != null) {
+            query.averageRating = {
+                $gte: parseFloat(req.query.minRating),
+                $lte: parseFloat(req.query.maxRating)
+            }
+        }
+
         if (req.query.sort != null) {
             sort[req.query.sort] = req.query.sortAsc ? "asc" : "desc"
         }
@@ -89,8 +101,8 @@ router.get("/", async (req, res) => {
         // Finds all products according to the query
         const products = await Product.find(query)
             .sort(sort)
-            .limit(limit)
             .skip(skip)
+            .limit(limit)
 
         // Done!
         res.status(200).json(products)

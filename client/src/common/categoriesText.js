@@ -14,7 +14,7 @@ const CategoriesText = props => {
             </h4>
             {props.links.map((link, _) => {
                 return (
-                    <Link key={"link_cat_text_" + link} className={cx("categoriesTextLink")} to={"#" + link.toLowerCase().replaceAll(" ", "-")}>
+                    <Link key={"link_cat_text_" + link} className={cx("categoriesTextLink")} to={ROUTES.products + "?genres=" + link.toLowerCase().replaceAll(" ", "-")}>
                         {link}
                     </Link>
                 )

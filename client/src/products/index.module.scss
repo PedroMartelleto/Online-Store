@@ -1,6 +1,53 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.labelsHorizontal {
+    display: flex;
+    flex-direction: row;
+}
+
+.thumb:focus {
+    outline: 2px solid c.$C2A !important;
+}
+
+.downArrow {
+    position: relative;
+    top: 3px;
+    margin-left: 4px;
+}
+
+.filterBtn {
+    margin-top: 30px !important;
+}
+
+.rangeLabels {
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    top: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-right: 6px;
+    color: c.$C1B;
+}
+
+.rangeLabels > h6 {
+    font-size: 13px;
+}
+
+.range {
+    margin-top: 32px;
+}
+
+.ratingRange {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 4px;
+}
+
 .pages {
     display: flex;
     flex-direction: row;
@@ -29,6 +76,7 @@
 }
 
 .pageNumber {
+    cursor: pointer;
     color: black;
     padding: 5px;
     margin-left: 3px;
@@ -151,15 +199,10 @@
     justify-content: center;
     align-items: flex-start;
     border-radius: 12px;
-    cursor: pointer;
     transition: all 0.3s ease;
     margin: 4px;
     width: 200px;
     height: 440px;
-}
-
-.productCard:hover {
-    background-color: c.$C1F;
 }
 
 .cardBorder {

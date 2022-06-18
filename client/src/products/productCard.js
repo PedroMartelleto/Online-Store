@@ -3,7 +3,7 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Icon } from "@iconify/react"
 import StoreButton from "../common/storeButton"
-import { Link } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { AuthContext } from "../api"
 const cx = classNames.bind(styles)
 
@@ -117,9 +117,10 @@ const StarRating = props => {
 const ProductCard = props => {
     const prod = props.product
     const { isAdmin } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     return (
-        <Link className={cx("prodLink")} to={`/products/${prod._id}`}>
+        <div className={cx("prodLink")}>
             <div className={cx({
                 "productCard": true,
                 "cardBorder": props.border
@@ -134,12 +135,12 @@ const ProductCard = props => {
                     <h4 style={{fontWeight: 600}}>
                         {prod.price + " USD"}
                     </h4>
-                    <StoreButton variant="buy">
+                    <StoreButton variant="buy" onMouseDown={event => navigate(`/products/${prod._id}`)}>
                         {!isAdmin ? "Buy now" : "Edit"}
                     </StoreButton>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 
