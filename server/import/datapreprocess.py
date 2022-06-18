@@ -1,5 +1,6 @@
 # Pre-processes csv to import into MongoDB
 
+from socket import TIPC_CLUSTER_SCOPE
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -90,30 +91,42 @@ def filter_rows(row, original_idx) -> pd.Series:
 
 books['remove'] = False
 
-for original_idx, row in tqdm(books.iterrows(), total=books.shape[0]):
-    if row['remove']: continue
+titles = list(books['title'])
+rating_counts = list(books['ratingCount'])
 
-    potential_removes = []
+def find_duplicates(i):
+    title = titles[i]
+    dups = []
 
-    for idx, other_row in books.iterrows():
-        if Levenshtein.ratio(row['title'], other_row['title']) >= 0.94:
-            potential_removes.append(idx)
     
-    if len(potential_removes) <= 0: continue
+    best_dup = i
+    best_rating_count = rating_counts[i]
+    
 
-    idx_to_keep = 0
-    biggest_rating = 0
+    for j  in range(i+1, books.shape[0]):        
+        title_j = titles[j]
+        rating_count_j = rating_counts[j]
 
-    for i in potential_removes:
-        if books['ratingCount'].iloc[i] > biggest_rating:
-            biggest_rating = books['ratingCount'].iloc[i]
-            idx_to_keep = i
+        ratio = Levenshtein.ratio(title, title_j)
 
-    for i in potential_removes:
-        if idx_to_keep != i:
-            books.at[i, 'remove'] = True
+        if ratio > 0.9:
+            dups.append(j)
+            if rating_count_j > best_rating_count:
+                dups[-1] = best_dup
+                best_dup = j
+                best_rating_count = rating_count_j
+                
+    return dups
 
-# Remove the rows that have the remove indication, and drop the column
-books = books.loc[~books["remove"]].drop(columns=["remove"])
+from multiprocessing import Pool, cpu_count
+def parallel_map(func, data):
+    with Pool(cpu_count()) as pool:
+        return list(tqdm(pool.imap(func, data), total = len(data)))
+
+all_dups = parallel_map(find_duplicates, range(books.shape[0]))
+all_dups = set([item for sublist in all_dups for item in sublist])
+
+books['remove'] = books['remove'] | books.index.isin(all_dups)
+books = books[~books["remove"]].drop(columns=["remove"])
 
 books.to_csv("processed_no_dups.csv", index=False, encoding="utf-8")

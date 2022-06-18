@@ -4,8 +4,16 @@ const mongoose = require('mongoose')
 let testutils = require('./testutils')
 const api = require('../api') 
 
-const user1 = {firstName: "usuario", lastName: "primeiro", email: "email1@email.com", password: "password", address: "address1", city: "city1", state: "state1", zip: "11111-1"}
-const user2 = {firstName: "usuario", lastName: "segundo", email: "email2@email.com", password: "password", address: "address2", city: "city2", state: "state2", zip: "22222-2"}
+const user1 = {
+    firstName: "usuario", lastName: "primeiro", email: "email1@email.com",
+    password: "password", address: "address1", city: "city1", state: "state1", zip: "11111-1",
+    phoneNumber: "123456789"
+}
+const user2 = {
+    firstName: "usuario", lastName: "segundo", email: "email2@email.com",
+    password: "password", address: "address2", city: "city2", state: "state2", zip: "22222-2",
+    phoneNumber: "123456789"
+}
 
 const product = 
     {
