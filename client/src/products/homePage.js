@@ -22,6 +22,8 @@ const HomePage = props => {
         })()
     }, [])
 
+    const numProductsToShow = Math.min(Math.floor(products.length / 4) * 4 - 1, products.length)
+
     return (
         <>
             <NavbarContainer />
@@ -42,7 +44,7 @@ const HomePage = props => {
                         links={["Fiction", "Psychology", "Science", "Science Fiction"]}
                         button="Explore"
                     />
-                    {products != null ? products.map(prod => <ProductCard
+                    {products != null ? products.slice(0, numProductsToShow).map(prod => <ProductCard
                         border={false}
                         product={prod}
                         key={prod._id}

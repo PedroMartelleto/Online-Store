@@ -6,7 +6,7 @@ const NavbarContainer = props => {
     return (
         <>
             <Navbar />
-            <NavBreadcrumb />
+            <NavBreadcrumb pathName={props.pathName} />
         </>
     )
 }

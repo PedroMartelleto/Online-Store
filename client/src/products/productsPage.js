@@ -1,14 +1,17 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
-import ProductCard, { StarRating, TestProduct } from "./productCard"
+import ProductCard, { StarRating } from "./productCard"
 import ResponsiveRow from "../common/responsiveRow"
 import CategoriesText from "../common/categoriesText"
 import NavbarContainer from "../common/navbarContainer"
 import StoreButton, { RightArrow } from "../common/storeButton"
-import { AuthContext } from "../api"
+import Api, { AuthContext } from "../api"
+import Pages from "./pages"
 import { ROUTES } from "../App"
+import { useParams } from "react-router"
+import { useSearchParams } from "react-router-dom"
 const cx = classNames.bind(styles)
 
 // MARK: - Functions used to keep track of the stars filters
@@ -41,8 +44,28 @@ const StarsCheckbox = props => {
 // MARK: - Main product page
 const ProductsPage = props => {
     const [ starsAllowed, setStarsAllowed ] = useState(new Set([1, 2, 3, 4, 5]))
+    const [ products, setProducts ] = useState([])
+
     const filters = []
     const { isAdmin } = useContext(AuthContext)
+    const [ searchParams, setSearchParams ] = useSearchParams()
+    console.log(searchParams) // TODO: Fix this :D
+    const sort = searchParams.sort || 'reviewCount'
+    const limit = 10
+    const page = searchParams.page || 1
+    const skip = page * limit
+    const sortAsc = true
+
+    useEffect(() => {
+        (async () => {
+            const genres = ['Fiction']
+            const products = await Api.getProductsBatch(genres, sort, limit, skip, sortAsc)
+            
+            if (products) {
+                setProducts(products)
+            }
+        })()
+    }, [setProducts, sort, limit, skip, sortAsc])
 
     return (
         <>
@@ -79,21 +102,16 @@ const ProductsPage = props => {
                             </div>
                         </div>
                         <ResponsiveRow classNames={{[cx("leftAligned")]: true}}>
-                            <ProductCard
-                                border={true}
-                                product={TestProduct}
-                            />
-                            <ProductCard
-                                border={true}
-                                product={TestProduct}
-                            />
-                            <ProductCard
-                                border={true}
-                                product={TestProduct}
-                            />
-                            
+                            {products.map(prod => (
+                                <ProductCard
+                                    border={true}
+                                    product={prod}
+                                    key={prod.id}
+                                />
+                            ))}
                         </ResponsiveRow>
                     </div>
+                    <Pages setSearchParams={setSearchParams} page={page} />
             </div>
         </>
     )

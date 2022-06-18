@@ -2,20 +2,16 @@ import React from "react"
 
 import styles from "./navbar.module.scss"
 import classNames from "classnames/bind"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 const cx = classNames.bind(styles)
 
 // NOTE: This is a temporary solution to get the breadcrumb path
-const products = {
-	"1236557": "The Way of Kings"
-}
 
-function createBreadcrumbPath() {
-	const url = new URL(window.location.href)
+function createBreadcrumbPath(location) {
 	let link = ""
 	const breadcrumb = []
 	
-	let pathname = url.pathname
+	let pathname = location.pathname
 	if (pathname.endsWith("/")) {
 		pathname = pathname.substring(0, pathname.length - 1)
 	}
@@ -24,16 +20,18 @@ function createBreadcrumbPath() {
 		let name = path.charAt(0).toUpperCase() + path.slice(1)
 
 		if (!Number.isNaN(Number(path))) {
-			name = products[String(path)]
+			name = "$$toBeDefined$$"
 		}
 
 		if (path == null || path.length <= 0) {
 			name = "Homepage"
 		}
 
-		for (let i = name.length - 1; i >= 1; --i) {
-			if (name.charAt(i) === name.charAt(i).toUpperCase()) {
-				name = name.substring(0, i) + " " + name.substring(i)
+		if (name !== "$$toBeDefined$$") {
+			for (let i = name.length - 1; i >= 1; --i) {
+				if (name.charAt(i) === name.charAt(i).toUpperCase()) {
+					name = name.substring(0, i) + " " + name.substring(i)
+				}
 			}
 		}
 
@@ -50,8 +48,18 @@ function createBreadcrumbPath() {
 	return breadcrumb
 }
 
+function getItemName(item, props, index, path) {
+	if (item.name === "$$toBeDefined$$") {
+		if (props.pathName) return props.pathName
+		else return ""
+	}
+
+	return item.name + (index+1 < path.length ? " > " : "")
+}
+
 const NavBreadcrumb = props => {
-    const path = createBreadcrumbPath()
+	const location = useLocation()
+    const path = createBreadcrumbPath(location)
 
 	return (
         <div className={cx("breadcrumb")}>
@@ -61,7 +69,7 @@ const NavBreadcrumb = props => {
                         "breadItem": true,
                         "breadItemActive": index === path.length - 1
                     })}>
-                        {item.name + (index+1 < path.length ? " > " : "")}
+                        {getItemName(item, props, index, path)}
                     </Link>
                 )
                 })}

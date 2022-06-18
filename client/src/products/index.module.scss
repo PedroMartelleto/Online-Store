@@ -1,13 +1,47 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.pages {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.pageSelected {
+    pointer-events: none;
+    color: c.$C2C !important;
+    font-weight: 600;
+}
+
+.pagesLabel {
+    margin-right: 6px;
+    color: c.$C1C;
+}
+
+.pageNums {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-left: 42px;
+}
+
+.pageNumber {
+    color: black;
+    padding: 5px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
 .homePage {
     padding: 15px 32px 32px 32px;
 }
 
 .leftAligned {
     align-items: flex-start !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
 }
 
 .titleCont {
@@ -120,7 +154,8 @@
     cursor: pointer;
     transition: all 0.3s ease;
     margin: 4px;
-    max-width: 300px;
+    width: 200px;
+    height: 440px;
 }
 
 .productCard:hover {
@@ -130,6 +165,8 @@
 .cardBorder {
     border: 1px solid c.$C1E;
     box-sizing: border-box;
+    height: 500px !important;
+    width: 240px !important;
 }
 
 .prodCardImgContainer {
@@ -147,6 +184,8 @@
 
 .productCardImage {
     max-width: 200px;
+    max-height: 320px;
+    object-fit: cover;
     border-radius: 20px 3px 20px 3px;
 }
 

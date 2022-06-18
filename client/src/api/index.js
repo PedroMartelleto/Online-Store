@@ -108,7 +108,19 @@ class Api {
         const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, sort, limit, skip, sortAsc })
         const response = await axios.get(queryURL, Api.defaults)
 
-        console.log(response)
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            return null
+        }
+    }
+
+    static async getProductsPageCount(genres, sort, limit, sortAsc) {
+        limit = limit || 10
+
+        const queryURL = ENDPOINT + "product/pageCount?" + encodeDataToURL({ genres, sort, limit, sortAsc })
+        const response = await axios.get(queryURL, Api.defaults)
 
         if (response.status === 200) {
             return response.data
@@ -133,9 +145,23 @@ class Api {
         return axios.get(uri, Api.defaults)
     }
 
-    static getProduct(prodId) {
+    static async getProduct(prodId) {
         const uri = ENDPOINT + "product/" + prodId
-        return axios.get(uri, Api.defaults)
+        try {
+            const response = await axios.get(uri, Api.defaults)
+            if (response.status === 200) {
+                return response.data
+            }
+            else {
+                console.warn(response)
+                return null
+            }
+        }
+        catch (err) {
+            console.warn(err)
+        }
+
+        return null
     }
 
     static setCart(userId, update) {

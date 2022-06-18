@@ -1,6 +1,11 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.leftAligned {
+    align-items: flex-start !important;
+    justify-content: center !important;
+}
+
 .price {
     display: flex;
     flex-direction: row;

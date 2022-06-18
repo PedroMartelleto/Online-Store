@@ -4,7 +4,7 @@ import "./lds-ellipsis.scss"
 class LoadingScreen extends React.Component {
     render() {
         return (
-            <div className="App-container">
+            <div className="LoadingScreen-Container">
                 <div className="lds-ellipsis">
                     <div />
                     <div />

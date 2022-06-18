@@ -4,11 +4,11 @@
 
 ## Functionalities
 
-- Remove duplicate titles (>0.99 similarity) from DB.
+- Fix query params (products page), filtering
 
-- Better Navbar
+- Query search term
 
-- Filtering and product lists
+- Better Navbar (Login, Logout, settings clearer)
 
 - Number of items in cart
 

@@ -88,13 +88,15 @@ const TestProduct = {
 const StarRating = props => {
     const stars = []
     
+    const star = Math.ceil(props.star*2)/2
+
     for (let i = 0; i < 5; i++) {
         let icon = "bx:star"
     
-        if (i+1 <= props.star) {
+        if (i+1 <= star) {
             icon = "bxs:star"
         }
-        else if (i + 0.5 <= props.star) {
+        else if (i + 0.5 <= star) {
             icon = "bxs:star-half"
         }
 
