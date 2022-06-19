@@ -4,15 +4,19 @@
 
 ## Functionalities
 
-- Fix cart
+- Validate input fields, check for changes
 
-- Number of items in cart
+- Remove cart size call, GET user data by default?, Toggle Add to cart and remove from cart button
 
-- Better Navbar (Login, Logout, settings clearer)
+- Admin pages
+
+- Register orders
+
+- Better-looking navbar + responsive design
 
 - Deploy everything to heroku to avoid CORS issues
 
-- Reupload DB (fix genres to be an array)
+- Reupload DB
 
 ## Requirements
  - General Requirements

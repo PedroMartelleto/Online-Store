@@ -42,7 +42,7 @@ description
 */
 
 const TestProduct = {
-    id: 1236557,
+    _id: 1236557,
     title: "The Way of Kings",
     link: "https://www.goodreads.com/book/show/7235533-the-way-of-kings",
     series: "(The Stormlight Archive #1)",

@@ -20,7 +20,7 @@ function renameObject(obj, renameMap) {
     const newObj = Object.assign({}, obj)
 
     for (const fieldName of Object.keys(newObj)) {
-        if (renameMap[fieldName]) {
+        if (renameMap[fieldName] != null && renameMap[fieldName] !== fieldName) {
             let value = newObj[fieldName]
 
             if (Array.isArray(value) || value instanceof String || typeof value === 'string') {
@@ -48,7 +48,11 @@ export default class ObjectRenamer {
         "City": "city",
         "State": "state",
         "ZIP/Postal code": "zip",
-        "Password": "password"
+        "Password": "password",
+        "Card number": "cardNumber",
+        "Expiration date": "expirationDate",
+        "CVC": "CVC",
+        "Card holder": "cardHolder"
     }
 
     static reversedRenameMap = reverseObject(this.renameMap)

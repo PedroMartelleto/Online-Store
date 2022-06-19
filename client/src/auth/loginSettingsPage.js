@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import NavbarContainer from "../common/navbarContainer"
@@ -6,17 +6,44 @@ import StoreButton from "../common/storeButton"
 import InputField from "./inputField"
 import ResponsiveRow from "../common/responsiveRow"
 import Payment from "./payment"
-import { AuthContext } from "../api"
+import Api, { AuthContext } from "../api"
 import ObjectRenamer from "../api/objectRenamer"
 import { ROUTES } from "../App"
 
 const cx = classNames.bind(styles)
 
 const LoginSettingsPage = props => {
-    const { isAdmin, authToken } = useContext(AuthContext)
-
-    const [ userData, setUserData ] = useState(ObjectRenamer.fromBackend(authToken))
+    const { isAdmin, authToken, logout } = useContext(AuthContext)
     const [ cardData, setCardData ] = useState({})
+    const [ userData, setUserData ] = useState(ObjectRenamer.fromBackend(authToken))
+
+    useEffect(() => {
+        (async () => {
+            // Gets the user's card data and info
+            const userData = await Api.getUser(authToken._id)
+
+            if (userData != null) {
+                let oldUserData = localStorage.getItem('token')
+                
+                if (oldUserData == null) {
+                    logout()
+                }
+                else {
+                    // If found, updates local storage values
+                    oldUserData = JSON.parse(oldUserData)
+                    const newToken = Object.assign({}, userData)
+                    newToken.isAdmin = oldUserData.isAdmin
+                    newToken.accessToken = oldUserData.accessToken
+                    localStorage.setItem('token', JSON.stringify(newToken))
+                }
+                
+                setUserData(ObjectRenamer.fromBackend(userData))
+            }
+
+            const cardData = await Api.getCardData(authToken._id)
+            setCardData(ObjectRenamer.fromBackend(cardData))
+        })()
+    }, [ authToken._id, logout ])
 
     // TODO: Enable save settings only when edited & validate fields
 
@@ -56,7 +83,11 @@ const LoginSettingsPage = props => {
                     : null}
 
                     <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
-                        <StoreButton className={{ [cx("submit")]: true }} variant="filled">
+                        <StoreButton
+                            className={{ [cx("submit")]: true }}
+                            variant="filled"
+                            onMouseDown={event => Api.mergeSettings(authToken._id, userData)}
+                        >
                             Save settings
                         </StoreButton>
                         <StoreButton className={{ [cx("submit")]: true }} variant="secondary">
@@ -75,7 +106,11 @@ const LoginSettingsPage = props => {
 
                             <Payment cardData={cardData} setCardData={setCardData} />
 
-                            <StoreButton className={{ [cx("submit")]: true }} variant="buy">
+                            <StoreButton
+                                className={{ [cx("submit")]: true }}
+                                variant="buy"
+                                onMouseDown={event => Api.mergeCardData(authToken._id, cardData)}
+                            >
                                 Update payment method
                             </StoreButton>
                         </>

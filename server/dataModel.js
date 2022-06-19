@@ -68,6 +68,17 @@ const UserSchema = new mongoose.Schema(
     }, { timestamps: true }
 )
 
+const CardSchema = new mongoose.Schema(
+    {
+        _id: { type: String, required: true, ref: "User" },
+        cardNumber: { type: String, required: true },
+        cardHolder: { type: String, required: true },
+        expirationDate: { type: String, required: true },
+        CVC: { type: String, required: true }
+    },
+    { timestamps: false }
+)
+
 const OrderSchema = new mongoose.Schema(
     {
         userId: { type: mongoose.Types.ObjectId, required: true, unique: true },
@@ -88,5 +99,6 @@ const OrderSchema = new mongoose.Schema(
 const User = mongoose.model("User", UserSchema)
 const Order = mongoose.model("Order", OrderSchema)
 const Product = mongoose.model("Product", ProductSchema)
+const Card = mongoose.model("Card", CardSchema)
 
-module.exports = { User, Order, Product }
+module.exports = { User, Order, Product, Card }

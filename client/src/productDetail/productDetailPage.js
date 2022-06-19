@@ -19,7 +19,7 @@ const ProductDetailPage = props => {
     const [ isLoading, setIsLoading ] = useState(true)
     const [ product, setProduct ] = useState(null)
     const [ recommendations, setRecommendations ] = useState([])
-    const { id: prodId } = useParams()
+    const { _id: prodId } = useParams()
 
     useEffect(() => {
         (async () => {
@@ -47,13 +47,11 @@ const ProductDetailPage = props => {
             setProduct(details)
             setIsLoading(false)
         })()
-    }, [ prodId, setProduct, setIsLoading, setRecommendations ])
+    }, [ prodId ])
 
-    if (!params.id) {
+    if (!params._id) {
         return <NotFoundPage />
     }
-
-    console.log(recommendations)
 
     const prod = product
 

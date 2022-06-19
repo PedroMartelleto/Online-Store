@@ -2,19 +2,36 @@ const router = require('express').Router()
 const { User, Product } = require('../dataModel')
 const { authorizeToken } = require('../tokenAuth')
 
-// GET /api/cart/:id
-router.get("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
+// GET /api/cart/size/:_id
+router.get("/size/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
-        const user = await User.findById(req.params.id)
+        const user = await User.findById(req.params._id)
         if (!user) {
             res.status(404).send('User not found.')
             return
         }
 
-        const cart = user.cart
+        res.status(200).json(user.cart.length)
+    }
+    catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
+// GET /api/cart/:_id
+router.get("/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
+    try {
+        const user = await User.findById(req.params._id)
+        if (!user) {
+            res.status(404).send('User not found.')
+            return
+        }
+
+        const cart = Object.assign({}, user.toObject()).cart.slice(0)
 
         for (const cartProduct of cart) {
-            const productData = await Product.findById(cartProduct.productId)
+            const productData = await Product.findById(String(cartProduct.productId).trim())
             if (productData != null) {
                 cartProduct.product = productData
             }
@@ -28,10 +45,10 @@ router.get("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     }
 })
 
-// PUT /api/cart/:id (updates contents of the cart)
-router.put("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
+// PUT /api/cart/:_id (updates contents of the cart)
+router.put("/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
-        let user = await User.findById(req.params.id)
+        let user = await User.findById(req.params._id)
         if (!user) {
             res.status(404).send('User not found.')
             return
@@ -45,15 +62,15 @@ router.put("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
     }
 })
 
-// POST /api/cart/:id/add/:prodId (adds a new product to the cart)
-router.post("/:id/add/:prodId", authorizeToken({ adminOnly: false }), async (req, res) => {
+// POST /api/cart/:_id/add/:prodId (adds a new product to the cart)
+router.post("/:_id/add/:prodId", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
-        if (!req.params.prodId || !req.params.id) {
+        if (!req.params.prodId || !req.params._id) {
             res.status(400).send('Missing Product or User ID.')
             return
         }
 
-        let user = await User.findById(req.params.id)
+        let user = await User.findById(req.params._id)
         if (!user) {
             res.status(404).send('User not found.')
             return
@@ -84,10 +101,10 @@ router.post("/:id/add/:prodId", authorizeToken({ adminOnly: false }), async (req
     }
 })
 
-// DELETE /api/cart/:id
-router.delete("/:id", authorizeToken({ adminOnly: false }), async (req, res) => {
+// DELETE /api/cart/:_id
+router.delete("/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
-        let user = await User.findById(req.params.id)
+        let user = await User.findById(req.params._id)
         if (!user) {
             res.status(404).send('User not found.')
             return

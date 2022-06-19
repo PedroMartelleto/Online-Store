@@ -9,7 +9,7 @@ const cx = classNames.bind(styles)
 
 const ProductInfo = props => {
     const prod = props.product
-    const { isAdmin, authToken } = useContext(AuthContext)
+    const { isAdmin, authToken, cartSize, setCartSize } = useContext(AuthContext)
 
     return (
         <div className={cx("prodInfo")}>
@@ -37,10 +37,13 @@ const ProductInfo = props => {
                     </h2>
                 </div>
                 <div className={cx("actions")}>
-                    <StoreButton variant="buy" onMouseDown={event => Api.addProductToCart(authToken._id, prod._id) }>
+                    <StoreButton variant="buy" onMouseDown={event => {
+                        Api.addProductToCart(authToken._id, prod._id)
+                        setCartSize(cartSize + 1)
+                    }}>
                         {!isAdmin ?
                         <>
-                            <InlineIcon icon="bx:plus" />
+                            <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
                             {"  Add to cart"}
                         </> : "Confirm changes"}
                     </StoreButton>

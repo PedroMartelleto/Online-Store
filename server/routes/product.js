@@ -30,10 +30,10 @@ router.post("/batch", authorizeToken({ adminOnly: true }), async (req, res) => {
     }
 })
 
-// PUT /api/product/:id (updates a product)
-router.put("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
+// PUT /api/product/:_id (updates a product)
+router.put("/:_id", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {
-        let product = await Product.findById(req.params.id)
+        let product = await Product.findById(req.params._id)
         if (!product) {
             res.status(404).send('Product not found.')
             return
@@ -48,10 +48,10 @@ router.put("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
     }
 })
 
-// GET /api/product/:id
-router.get("/:id", async (req, res) => {
+// GET /api/product/:_id
+router.get("/:_id", async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id)
+        const product = await Product.findById(req.params._id)
         if (!product) {
             res.status(404).send('Product not found.')
             return
@@ -65,7 +65,7 @@ router.get("/:id", async (req, res) => {
 })
 
 
-// GET /api/product?genres=action&genres=adventure&sort=price&limit=10&skip=20&sortAsc=true
+// GET /api/product?genres=action&genres=adventure&sort=price&limit=10&skip=20
 router.get("/", async (req, res) => {
     try {
         // Safely figures out which queries were passed in
@@ -100,12 +100,7 @@ router.get("/", async (req, res) => {
             dbQuery.averageRating.$lte = parseFloat(req.query.maxRating)
         }
 
-        if (req.query.sort != null) {
-            sort[req.query.sort] = req.query.sortAsc ? "asc" : "desc"
-        }
-        else {
-            sort["reviewCount"] = "desc"
-        }
+        sort["reviewCount"] = "desc"
 
         // Finds all products according to the query
         const products = await Product.find(dbQuery)
@@ -123,9 +118,9 @@ router.get("/", async (req, res) => {
 })
 
 // DELETE /api/product
-router.delete("/:id", authorizeToken({ adminOnly: true }), async (req, res) => {
+router.delete("/:_id", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {
-        const product = await Product.findById(req.params.id)
+        const product = await Product.findById(req.params._id)
         if (!product) {
             res.status(404).send('Product not found.')
             return

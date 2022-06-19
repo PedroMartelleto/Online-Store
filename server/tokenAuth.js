@@ -24,11 +24,10 @@ const authorizeJWTToken = (settings) => {
     return (req, res, next) => {
         verifyJWTToken(req, res, () => {
             const adminOnly = settings.adminOnly || false
-
             if (req.user.isAdmin) {
                 next() // Goes to router (continues running request)
             }
-            else if (!adminOnly && req.user.id === req.params.id) {
+            else if (!adminOnly && String(req.user.id) === String(req.params._id)) {
                 next() // Goes to router (continues running request)
             }
             else {

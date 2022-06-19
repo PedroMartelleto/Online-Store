@@ -12,6 +12,7 @@ const AuthProvider = ({ children }) => {
     const [ isWaitingAuth, setIsWaitingAuth ] = useState(true)
     const [ isAdmin, setIsAdmin ] = useState(false)
     const [ authToken, setAuthToken ] = useState(null)
+    const [ cartSize, setCartSize ] = useState(0)
 
     // Callback that handles token authentication
     const handleToken = (token) => {
@@ -24,8 +25,8 @@ const AuthProvider = ({ children }) => {
     // Authentication callbacks passed down by the Context Provider
     const login = async (loginInfo) => {
         const response = await axios.post(ENDPOINT + "auth/login", ObjectRenamer.toBackend(loginInfo), Api.defaults)
-        
-        if (response.status === 200) {
+
+        if (response.status === 201 || response.status === 200) {
             localStorage.setItem('token', JSON.stringify(response.data))
             handleToken(response.data)
         }
@@ -38,7 +39,7 @@ const AuthProvider = ({ children }) => {
     const register = async (registerInfo) => {
         const response = await axios.post(ENDPOINT + "auth/register", ObjectRenamer.toBackend(registerInfo), Api.defaults)
         
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
             localStorage.setItem('token', JSON.stringify(response.data))
             handleToken(response.data)
         }
@@ -49,10 +50,10 @@ const AuthProvider = ({ children }) => {
     }
 
     const logout = async () => {
-        setAuthenticated(false)
-        setIsAdmin(false)
         localStorage.removeItem('token')
         Api.defaults.headers.token = null
+        setAuthenticated(false)
+        setIsAdmin(false)
     }
 
     // Checks for session tokens
@@ -68,14 +69,14 @@ const AuthProvider = ({ children }) => {
         }
 
         setIsWaitingAuth(false)
-    }, [setAuthenticated])
+    }, [])
 
     if (isWaitingAuth) {
         return <LoadingScreen />
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, login, logout, register, isAdmin, authToken }}>
+        <AuthContext.Provider value={{ authenticated, login, logout, register, isAdmin, authToken, cartSize, setCartSize }}>
             {children}
         </AuthContext.Provider>
     )
@@ -101,13 +102,24 @@ class Api {
         }
     }
 
-    static async getProductsBatch(genres, sort, limit, skip, sortAsc, minRating, maxRating) {
+    static async getCartSize(userId) {
+        const uri = ENDPOINT + "user/cart/size/" + userId
+        const response = await axios.get(uri, Api.defaults)
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            return 0
+        }
+    }
+
+    static async getProductsBatch(genres, limit, skip, minRating, maxRating) {
         limit = limit || 10
         skip = skip || 0
 
-        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, sort, limit, skip, sortAsc, minRating, maxRating })
+        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, limit, skip, minRating, maxRating })
         const response = await axios.get(queryURL, Api.defaults)
-        console.log("Query", queryURL)
+
         if (response.status === 200) {
             return response.data
         }
@@ -130,9 +142,43 @@ class Api {
         }
     }
 
-    static editUser(id, update) {
+    static async mergeSettings(id, update) {
         const uri = ENDPOINT + "user/" + id
-        return axios.put(uri, update, Api.defaults)
+        const response = axios.put(uri, ObjectRenamer.toBackend(update), Api.defaults)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
+    }
+
+    static async mergeCardData(id, update) {
+        const uri = ENDPOINT + "user/card/" + id
+        const response = await axios.post(uri, ObjectRenamer.toBackend(update), Api.defaults)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
+    }
+
+    static async getCardData(id) {
+        const uri = ENDPOINT + "user/card/" + id
+        const response = await axios.get(uri, Api.defaults)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
     }
 
     static deleteUser(id) {
@@ -140,9 +186,17 @@ class Api {
         return axios.delete(uri, Api.defaults)
     }
 
-    static getUser(id) {
+    static async getUser(id) {
         const uri = ENDPOINT + "user/" + id
-        return axios.get(uri, Api.defaults)
+        const response = await axios.get(uri, Api.defaults)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
     }
 
     static async getProduct(prodId) {
@@ -164,9 +218,17 @@ class Api {
         return null
     }
 
-    static setCart(userId, update) {
+    static async setCart(userId, update) {
         const uri = ENDPOINT + "cart/" + userId
-        return axios.put(uri, update, Api.defaults)
+        const response = await axios.put(uri, update, Api.defaults)
+
+        if (response.status === 200) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
     }
 
     static async addProductToCart(userId, prodId) {

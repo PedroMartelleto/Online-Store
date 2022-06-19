@@ -16,11 +16,11 @@ import { AuthProvider } from "./api"
 const ROUTES = {
 	home: "/",
 	products: "/products",
-	productDetail: "/products/:id",
+	productDetail: "/products/:_id",
 	newProduct: "/products/new",
 	login: "/login",
 	signUp: "/signUp",
-	userSettings: "/user/settings",
+	userSettings: "/user",
 	userCart: "/user/cart",
 	manageUsers: "/admin/manageUsers"
 }

@@ -4,7 +4,6 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import StoreButton from "../common/storeButton"
 import { InlineIcon } from "@iconify/react"
-import { Link } from "react-router-dom"
 const cx = classNames.bind(styles)
 
 const Pages = props => {
@@ -26,7 +25,10 @@ const Pages = props => {
             <StoreButton onMouseDown={event => {
                 event.preventDefault()
                 props.setSearchParams({
-                    page: Number(props.page) + 1
+                    page: Number(props.page) + 1,
+                    minRating: props.minRating,
+                    maxRating: props.maxRating,
+                    genres: props.genres
                 })
                 window.scrollTo({top: 0, behavior: 'smooth'})
             }} variant="filled" disabled={props.page === 4}>

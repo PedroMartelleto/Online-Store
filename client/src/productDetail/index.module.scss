@@ -1,6 +1,11 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.plus {
+    position: relative;
+    top: 2px;
+}
+
 .leftAligned {
     align-items: flex-start !important;
     justify-content: center !important;

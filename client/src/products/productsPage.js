@@ -12,6 +12,7 @@ import { ROUTES } from "../App"
 import { useSearchParams } from "react-router-dom"
 import StarsFilter from "./starsFilter"
 import NotFoundPage from "../notFound/notFoundPage"
+import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
 
 const cx = classNames.bind(styles)
 
@@ -26,24 +27,29 @@ const ProductsPage = props => {
     const [minRating, setMinRating] = useState(searchParams.get('minRating') || 0)
     const [maxRating, setMaxRating] = useState(searchParams.get('maxRating') || 5)
 
-    const sort = searchParams.get('sort') || 'reviewCount'
-    const limit = 10
+    let paramsGenres = searchParams.get('genres')
+    if (!Array.isArray(paramsGenres)) {
+        paramsGenres = paramsGenres ? [paramsGenres] : []
+    }
+
+    const genres = paramsGenres
+    const firstGenre = genres[0]
+
+    const limit = 12
     let page = searchParams.get('page') || 1
     page = Number(page)
 
     const skip = (page-1) * limit
-    const sortAsc = true
 
     useEffect(() => {
         (async () => {
-            const genres = ['Fiction']
-            const products = await Api.getProductsBatch(genres, sort, limit, skip, sortAsc, minRating, maxRating)
+            const products = await Api.getProductsBatch(firstGenre, limit, skip, minRating, maxRating)
 
             if (products) {
                 setProducts(products)
             }
         })()
-    }, [setProducts, sort, limit, skip, sortAsc, page, minRating, maxRating ])
+    }, [ skip, page, minRating, maxRating, firstGenre ])
 
     if (page > 4 || page <= 0) {
         return <NotFoundPage />
@@ -54,7 +60,7 @@ const ProductsPage = props => {
             <NavbarContainer />
             <div className={cx("prodCont")}>
                 <div className={cx("titleCont")}>
-                    <h1>Fiction</h1>
+                    <h1>{genres.map((genre, i) => genre + (i < genres.length - 1 ? " " : ""))}</h1>
                     {isAdmin ?
                         <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
                             {"Add a New Book "}<RightArrow color="white" />
@@ -70,7 +76,7 @@ const ProductsPage = props => {
                         <CategoriesText
                             noPadding={true}
                             title="Categories"
-                            links={["Fiction", "Psychology", "Science", "Science Fiction"]}
+                            links={genresSortedByVoteCount.genresSortedByVoteCount.slice(0, 8)}
                         />
                         <div className={cx("rating")}>
                             <h4>Rating</h4>
@@ -100,7 +106,7 @@ const ProductsPage = props => {
                         ))}
                     </ResponsiveRow>
                 </div>
-                <Pages setSearchParams={setSearchParams} page={page} />
+                <Pages setSearchParams={setSearchParams} page={page} minRating={minRating} maxRating={maxRating} genres={genres} />
             </div>
         </>
     )

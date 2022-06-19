@@ -1,14 +1,16 @@
-import React, { useContext, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import SearchBar from "./searchBar"
 import CategoriesBar from "./categoriesBar"
 
 import styles from "./navbar.module.scss"
 import { Icon } from "@iconify/react"
 import classNames from "classnames/bind"
-import { AuthContext } from "../api"
-import { Navigate, useLocation } from "react-router"
+import Api, { AuthContext } from "../api"
+import { useLocation, useNavigate } from "react-router"
 import { ROUTES } from "../App"
 import StoreButton from "./storeButton"
+import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
+
 const cx = classNames.bind(styles)
 
 const NavbarButton = (props) => {
@@ -19,27 +21,31 @@ const NavbarButton = (props) => {
     )
 }
 
+const CartSummary = ({ cartSize, navigate }) => {
+    return (
+        <div className={cx("cartSummary")}>
+            <NavbarButton icon="bx:cart" onMouseDown={event => navigate(ROUTES.userCart)} />
+            <div className={cx("cartSize")}>
+                <div className={cx("cartSizeNum")}>
+                    {cartSize}
+                </div>
+            </div>
+        </div>
+    )
+}
+
 const Navbar = (props) => {
-    const { isAdmin, authenticated } = useContext(AuthContext)
+    const { isAdmin, authenticated, logout, cartSize, setCartSize } = useContext(AuthContext)
 
-    const [ navToSettings, setNavToSettings ] = useState(false)
-    const [ navToCart, setNavToCart ] = useState(false)
-    const [ navToCreateProduct, setNavToCreateProduct ] = useState(false)
     const location = useLocation()
+    const navigate = useNavigate()
 
-    // TODO: Fix icons in this page
-
-    if (navToSettings) {
-        return <Navigate to={ROUTES.userSettings} />
-    }
-
-    if (navToCart) {
-        return <Navigate to={ROUTES.userCart} />
-    }
-
-    if (navToCreateProduct) {
-        return <Navigate to={ROUTES.newProduct} />
-    }
+    useEffect(() => {
+        (async () => {
+            const cartSize = await Api.getCartSize()
+            setCartSize(cartSize)
+        })()
+    }, [])
 
     return (
         <div className={cx("verticalContainer")}>
@@ -51,19 +57,25 @@ const Navbar = (props) => {
                 <SearchBar/>
                 <div className={cx("btnsContainer")}>
                     {authenticated ? <>
-                        <NavbarButton icon="bx:user" onMouseDown={event => setNavToSettings(true)} />
-                        {isAdmin ? null : <NavbarButton icon="bx:cart" onMouseDown={event => setNavToCart(true)} />}
+                        <NavbarButton icon="bx:user" onMouseDown={event => navigate(ROUTES.userSettings)} />
+                        {isAdmin ? null : <CartSummary cartSize={cartSize} navigate={navigate} />}
                     </> : <StoreButton disabled={location.pathname === ROUTES.login} onMouseDown={event => {
                         if (location.pathname !== ROUTES.login) {
                             window.location.href = ROUTES.login
                         }
                     }}>
-                            Login
+                            Login/Sign Up
                         </StoreButton>
                     }
+                    {authenticated ? <StoreButton onMouseDown={event => {
+                            logout()
+                            navigate(ROUTES.home)
+                        }}>
+                            Logout
+                        </StoreButton> : undefined}
                 </div>
             </div>
-            <CategoriesBar categories={["Fiction", "Psychology", "Horror", "Science Fiction", "Humor", "Apocalyptic"]} />
+            <CategoriesBar categories={genresSortedByVoteCount.genresSortedByVoteCount.slice(0,10)} />
         </div>
     )
 }

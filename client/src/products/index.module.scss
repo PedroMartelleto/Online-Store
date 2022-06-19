@@ -89,7 +89,7 @@
 
 .leftAligned {
     align-items: flex-start !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
 }
 
 .titleCont {
@@ -206,10 +206,11 @@
 }
 
 .cardBorder {
+    margin-top: 12px;
     border: 1px solid c.$C1E;
     box-sizing: border-box;
-    height: 500px !important;
-    width: 240px !important;
+    height: 460px !important;
+    width: 225px !important;
 }
 
 .prodCardImgContainer {
@@ -226,7 +227,7 @@
 }
 
 .productCardImage {
-    max-width: 200px;
+    max-width: 180px;
     max-height: 320px;
     object-fit: cover;
     border-radius: 20px 3px 20px 3px;

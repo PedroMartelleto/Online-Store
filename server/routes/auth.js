@@ -19,7 +19,15 @@ router.post('/register', async (req, res) => {
         let newUser = new User(userObj)
         newUser.cart = []
         const savedUser = await newUser.save()
-        res.status(201).json(savedUser)
+        const { password, ...userWithoutPassword } = savedUser.toObject()
+
+        const accessToken = jwt.sign({
+            id: savedUser._id, isAdmin: savedUser.isAdmin
+        }, process.env.JWT_SECRET_KEY, { expiresIn: '2d' })
+
+        res.status(201).json({
+            ...userWithoutPassword, accessToken
+        })
     }
     catch (err) {
         console.warn(err)

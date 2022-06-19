@@ -11,6 +11,7 @@ import LoadingScreen from "../common/loadingScreen"
 import Api, { AuthContext } from "../api"
 import { Navigate } from "react-router"
 import { ROUTES } from "../App"
+import { Icon } from "@iconify/react"
 
 const cx = classNames.bind(styles)
 
@@ -24,33 +25,52 @@ const unitOptions = [
 
 const ProductSummary = props => {
     const prod = props.product
-
+    
     return (
         <ResponsiveRow>
             <div className={cx("prodImgContainer")}>
                 <img className={cx("prodImg")} src={prod.coverLink} alt="Book cover" />
             </div>
             <div className={cx("prodDetails")}>
-                <h5 style={{ fontWeight: 500 }}>{prod.title}</h5>
-                <div>{prod.author}</div>
-                <StarRating star={prod.averageRating} />
-                <div className={cx("productCardTail")}>
-                    <h4 style={{ fontWeight: 600 }}>
-                        {prod.price + " USD"}
-                    </h4>
-                    {/* Number of units select */}
+                <div className={cx("prodTopCont")}>
                     <div>
-                        <Select
-                            defaultValue={{value: props.quantity, label: props.quantity}}
-                            isMulti={false}
-                            isSearchable={true}
-                            options={unitOptions}
-                            onChange={newValue => props.setQuantities(update(props.quantities, { [props.index]: { $set: newValue.value } }))}
-                            className={cx("unitSelect")}
-                        />
-                        <span>
-                            Units
-                        </span>
+                        <h5 style={{ fontWeight: 500 }}>{prod.title}</h5>
+                        <div>{prod.author}</div>
+                    </div>
+                    <button onClick={event => {
+                        const cartWithoutThisItem = props.cart.filter(item => item.productId !== prod._id)
+                        Api.setCart(props.userId, cartWithoutThisItem)
+                        props.setCart(cartWithoutThisItem)
+                    }} variant="buy" className={cx("remove")}>
+                        <Icon icon="mdi:close" width={24} />
+                    </button>
+                </div>
+                <div className={cx("starRatingCont")}>
+                    <StarRating star={prod.averageRating} />
+                    <div className={cx("productCardTail")}>
+                        <h4 style={{ fontWeight: 600 }}>
+                            {prod.price + " USD"}
+                        </h4>
+                        {/* Number of units select */}
+                        <div>
+                            <Select
+                                defaultValue={{ value: 1, label: "1" }}
+                                isMulti={false}
+                                isSearchable={true}
+                                options={unitOptions}
+                                onChange={newValue => {
+                                    props.setCart(update(props.cart, {
+                                        [props.index]: { quantity: {
+                                            $set: newValue.value
+                                         }}
+                                    }))
+                                }}
+                                className={cx("unitSelect")}
+                            />
+                            <span>
+                                Units
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -61,8 +81,7 @@ const ProductSummary = props => {
 const CartPage = props => {
     const [ isLoading, setIsLoading ] = useState(true)
     const { isAdmin, authToken } = useContext(AuthContext)
-    const [ products, setProducts ] = useState([])
-    const [ quantities, setQuantities ] = useState(products.map(prod => 1))
+    const [ cart, setCart ] = useState([])
     
     // Runs once. GETs the cart for the authenticated user.
     useEffect(() => {
@@ -70,17 +89,9 @@ const CartPage = props => {
 
         (async () => {
             const cart = await Api.getCart(authToken._id)
-            const cartProducts = []
-            const cartQuantities = []
 
             if (cart != null) {
-                for (const cartProd of cart) {
-                    cartProducts.push(cartProd.product)
-                    cartQuantities.push(cartProd.quantity)
-                }
-
-                setProducts(cartProducts)
-                setQuantities(cartProducts)
+                setCart(cart)
             }
 
             setIsLoading(false)
@@ -100,12 +111,18 @@ const CartPage = props => {
     // Computes subtotal
     let subtotal = 0
 
-    for (let i = 0; i < products.length; i++) {
-        subtotal += products[i].price * Number(quantities[i])
+    for (let i = 0; i < cart.length; i++) {
+        subtotal += (cart[i] != null ? (cart[i].product.price * parseFloat(cart[i].quantity)) : 0)
+    }
+
+    if (Number.isNaN(subtotal)) {
+        subtotal = 0
     }
 
     // Simulates shipping
-    const shipping = subtotal <= 15 ? 0 : 2.99
+    const promo = 5
+    const fixedShipping = 2.99
+    const shipping = subtotal >= promo ? 0 : fixedShipping
 
     // Shipping date is hardcoded
     const today = new Date(new Date().getTime()+(5*24*60*60*1000));
@@ -120,21 +137,30 @@ const CartPage = props => {
                         Order summary
                     </h3>
                     <div className="caption">
-                        Pricing can change depending on shipping method and taxes of your state.
+                        Pricing can change depending on shipping method and taxes of your state.<br/>
+                        Free shipping for purchases above {promo} USD.
                     </div>
                     {
-                        products.map((prod, index) => {
+                        cart == null || cart.length <= 0 ?
+                        <h6>
+                            Your cart is empty.
+                        </h6>
+                        : null
+                    }
+                    {
+                        cart != null ? cart.map((prod, index) => {
                             return (
                                 <ProductSummary
                                     key={"prod-" + prod + "-" + index}
                                     index={index}
-                                    product={prod}
-                                    quantity={quantities[index]}
-                                    quantities={quantities}
-                                    setQuantities={setQuantities}
+                                    product={prod.product}
+                                    quantity={prod.quantity}
+                                    setCart={setCart}
+                                    cart={cart}
+                                    userId={authToken._id}
                                 />
                             )
-                        })
+                        }) : null
                     }
                     <div className={cx("resultRow")}>
                         <h5>Subtotal</h5>
@@ -142,7 +168,7 @@ const CartPage = props => {
                     </div>
                     <div className={cx("resultRow")}>
                         <h5>Shipping</h5>
-                        <h5>{shipping.toFixed(2)} USD</h5>
+                        <h5>{subtotal >= promo ? <span className={cx("freeShipping")}>{fixedShipping.toFixed(2) + " USD"}</span> : null} {shipping.toFixed(2)} USD</h5>
                     </div>
                     <div className={cx("resultRow")}>
                         <div className={cx("total")}>
@@ -152,7 +178,7 @@ const CartPage = props => {
                         <h3>{(shipping + subtotal).toFixed(2)} USD</h3>
                     </div>
                 </div>
-                <StoreButton disabled={quantities.length <= 0} className={{ [cx("completeOrderBtn")]: true }} variant="buy">
+                <StoreButton disabled={cart.length <= 0} className={{ [cx("completeOrderBtn")]: true }} variant="buy">
                     Complete order
                 </StoreButton>
             </div>

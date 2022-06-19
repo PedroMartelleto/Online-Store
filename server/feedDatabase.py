@@ -5,7 +5,7 @@ import json
 import sys
 from tqdm import tqdm
 
-df = pd.read_csv('import/processed_no_dups.csv')
+df = pd.read_csv('import/processed_no_dups.csv', encoding="utf-8")
 df.drop_duplicates(inplace=True)
 df.reset_index(drop=True, inplace=True)
 df = df.replace(float('nan'), '')
@@ -31,17 +31,5 @@ headers = {'content-type': 'application/json', 'Token': 'Bearer ' + token}
 
 print("Making request...")
 
-
-# Splits the products list into 2000-element chunks
-frags = []
-last_i = 0
-chk = 10
-for i in range(0, len(products), chk):
-    frags.append(products[i:i+chk if i+chk <= len(products) else len(products)])
-
-for frag in tqdm(frags):
-    dataToSend = json.dumps({ "products": frag })
-
-    r = requests.post(url, data=dataToSend, headers=headers)
-
-    assert r.status_code == 201
+dataToSend = json.dumps({ "products": products })
+r = requests.post(url, data=dataToSend, headers=headers)
