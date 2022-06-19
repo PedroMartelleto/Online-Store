@@ -1,15 +1,64 @@
 import { InlineIcon } from "@iconify/react"
 import React, { useContext } from "react"
 import StoreButton from "../common/storeButton"
-
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 const cx = classNames.bind(styles)
+
+function findInCart(cartSummary, prodId) {
+    for (let i = 0; i < cartSummary.length; ++i) {
+        if (String(cartSummary[i].productId) === String(prodId)) {
+            return i
+        }
+    }
+    return -1
+}
+
+const AddToCartButton = ({ prod, cartSummary, setCartSummary, isAdmin }) => {
+    let indexInCart = findInCart(cartSummary, prod._id)
+
+    return (
+        <StoreButton
+            variant="buy"
+            onMouseDown={event => {
+                (async() => {
+                    if (!isAdmin) {
+                        if (cartSummary == null) {
+                            console.warn("Cart summary should never be null at this point.")
+                            return
+                        }
+
+                        indexInCart = findInCart(cartSummary, prod._id)
+                        
+                        if (indexInCart < 0) {
+                            const newSummary = await API.addProductToCart(prod._id)
+                            if (newSummary != null) setCartSummary(newSummary)
+                        }
+                        else {
+                            const newSummary = await API.removeProductFromCart(prod._id)
+                            if (newSummary != null) setCartSummary(newSummary)
+                        }
+                    }
+                })()
+            }}>
+            {!isAdmin ? (indexInCart < 0 ?
+                <div className={cx("addToCart")}>
+                    <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
+                    <span>Add to cart</span>
+                </div>
+                : <div className={cx("addToCart")}>
+                    <InlineIcon className={cx("plus")} icon="mdi:minus" width={22} />
+                    <span>Remove from cart</span>
+                </div>)
+                : "Confirm changes"}
+        </StoreButton>
+    )
+}
 
 const ProductInfo = props => {
     const prod = props.product
-    const { isAdmin, authToken, cartSize, setCartSize } = useContext(AuthContext)
+    const { isAdmin, cartSummary, setCartSummary } = useContext(AuthContext)
 
     return (
         <div className={cx("prodInfo")}>
@@ -37,16 +86,12 @@ const ProductInfo = props => {
                     </h2>
                 </div>
                 <div className={cx("actions")}>
-                    <StoreButton variant="buy" onMouseDown={event => {
-                        Api.addProductToCart(authToken._id, prod._id)
-                        setCartSize(cartSize + 1)
-                    }}>
-                        {!isAdmin ?
-                        <>
-                            <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
-                            {"  Add to cart"}
-                        </> : "Confirm changes"}
-                    </StoreButton>
+                    <AddToCartButton
+                        prod={prod}
+                        cartSummary={cartSummary}
+                        setCartSummary={setCartSummary}
+                        isAdmin={isAdmin}
+                    />
                     {isAdmin ?
                         <StoreButton className={{[cx("archiveBtn")]: true}} variant="buy" >
                             Archive

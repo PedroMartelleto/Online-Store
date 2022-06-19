@@ -6,7 +6,7 @@ import ProductCard from "./productCard"
 import ResponsiveRow from "../common/responsiveRow"
 import NavbarContainer from "../common/navbarContainer"
 import StoreButton, { RightArrow } from "../common/storeButton"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 import { ROUTES } from "../App"
 import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
 
@@ -18,12 +18,12 @@ const HomePage = props => {
 
     useEffect(() => {
         (async () => {
-            const prod = await Api.getProductsBatch(null, null, 9, 0, null)
-            setProducts(prod)
+            const prods = await API.getProductsBatch(null, 9, 0, null, null)
+            setProducts(prods)
         })()
     }, [])
 
-    const numProductsToShow = Math.min(Math.floor(products.length / 4) * 4 - 1, products.length)
+    const numProductsToShow = 9
 
     return (
         <>

@@ -2,8 +2,13 @@
 @use "../common/sizes" as f;
 
 .plus {
-    position: relative;
-    top: 2px;
+    margin-right: 4px;
+}
+
+.addToCart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .leftAligned {

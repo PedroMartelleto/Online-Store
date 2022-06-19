@@ -51,7 +51,7 @@ const UserSchema = new mongoose.Schema(
         // Basic info
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        email: { type: String, required: true, unique: true },
+        email: { type: String, required: true, index: { unique: true } },
         password: { type: String, required: true },
         address: { type: String, required: true },
         city: { type: String, required: true },
@@ -95,6 +95,8 @@ const OrderSchema = new mongoose.Schema(
     },
     { timestamps: true }
 )
+
+ProductSchema.index({ title: 'text', series: 'text', author: 'text', genres: 'text' })
 
 const User = mongoose.model("User", UserSchema)
 const Order = mongoose.model("Order", OrderSchema)

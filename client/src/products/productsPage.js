@@ -6,7 +6,7 @@ import ResponsiveRow from "../common/responsiveRow"
 import CategoriesText from "../common/categoriesText"
 import NavbarContainer from "../common/navbarContainer"
 import StoreButton, { RightArrow } from "../common/storeButton"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 import Pages from "./pages"
 import { ROUTES } from "../App"
 import { useSearchParams } from "react-router-dom"
@@ -32,6 +32,7 @@ const ProductsPage = props => {
         paramsGenres = paramsGenres ? [paramsGenres] : []
     }
 
+    const searchTerm = searchParams.get('searchTerm') || ""
     const genres = paramsGenres
     const firstGenre = genres[0]
 
@@ -43,13 +44,13 @@ const ProductsPage = props => {
 
     useEffect(() => {
         (async () => {
-            const products = await Api.getProductsBatch(firstGenre, limit, skip, minRating, maxRating)
+            const products = await API.getProductsBatch(firstGenre, limit, skip, minRating, maxRating, searchTerm)
 
             if (products) {
                 setProducts(products)
             }
         })()
-    }, [ skip, page, minRating, maxRating, firstGenre ])
+    }, [ skip, page, minRating, maxRating, firstGenre, searchTerm ])
 
     if (page > 4 || page <= 0) {
         return <NotFoundPage />
@@ -57,7 +58,7 @@ const ProductsPage = props => {
 
     return (
         <>
-            <NavbarContainer />
+            <NavbarContainer setSearchParams={setSearchParams} searchParams={searchParams} />
             <div className={cx("prodCont")}>
                 <div className={cx("titleCont")}>
                     <h1>{genres.map((genre, i) => genre + (i < genres.length - 1 ? " " : ""))}</h1>

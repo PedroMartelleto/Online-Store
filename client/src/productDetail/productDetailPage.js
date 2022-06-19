@@ -9,7 +9,7 @@ import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import { Link } from "react-router-dom"
 import NavbarContainer from "../common/navbarContainer"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 import LoadingScreen from "../common/loadingScreen"
 const cx = classNames.bind(styles)
 
@@ -23,8 +23,8 @@ const ProductDetailPage = props => {
 
     useEffect(() => {
         (async () => {
-            const details = await Api.getProduct(prodId)
-
+            const details = await API.getProduct(prodId)
+            
             if (details.recommendedBooks != null) {
                 let recommended = Array.from(new Set(details.recommendedBooks.split(",").map(r => r.trim())))
 
@@ -35,7 +35,7 @@ const ProductDetailPage = props => {
                 const recProducts = []
 
                 for (const recId of recommended) {
-                    const prod = await Api.getProduct(recId.trim())
+                    const prod = await API.getProduct(recId.trim())
                     if (prod != null) {
                         recProducts.push(prod)
                     }
@@ -88,7 +88,7 @@ const ProductDetailPage = props => {
                 </div>
                 <ResponsiveRow classNames={{[cx("leftAligned")]: true}}>
                     {recommendations.map(prod => <ProductCard
-                        key={prod.id}
+                        key={prod._id}
                         border={false}
                         product={prod}
                     />)}

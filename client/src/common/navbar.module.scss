@@ -5,6 +5,12 @@
     position: relative;
 }
 
+.searchBar > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .cartSize {
     display: flex;
     align-items: center;

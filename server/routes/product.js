@@ -65,7 +65,7 @@ router.get("/:_id", async (req, res) => {
 })
 
 
-// GET /api/product?genres=action&genres=adventure&sort=price&limit=10&skip=20
+// GET /api/product?genres=action&genres=adventure&sort=price&limit=10&skip=20&searchTerm=someSearchTerm
 router.get("/", async (req, res) => {
     try {
         // Safely figures out which queries were passed in
@@ -98,6 +98,10 @@ router.get("/", async (req, res) => {
 
         if (req.query.maxRating != null) {
             dbQuery.averageRating.$lte = parseFloat(req.query.maxRating)
+        }
+
+        if (req.query.searchTerm != null) {
+            dbQuery.$text = { $search: req.query.searchTerm }
         }
 
         sort["reviewCount"] = "desc"

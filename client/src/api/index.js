@@ -12,11 +12,15 @@ const AuthProvider = ({ children }) => {
     const [ isWaitingAuth, setIsWaitingAuth ] = useState(true)
     const [ isAdmin, setIsAdmin ] = useState(false)
     const [ authToken, setAuthToken ] = useState(null)
-    const [ cartSize, setCartSize ] = useState(0)
+    const [ cartSummary, setCartSummary ] = useState(null)
 
     // Callback that handles token authentication
     const handleToken = (token) => {
-        Api.defaults.headers.token = `Bearer ${token.accessToken}`
+        API.defaults.headers.token = `Bearer ${token.accessToken}`
+        API.defaults.userId = token._id
+
+        console.log(token._id)
+
         setAuthenticated(true)
         setIsAdmin(token.isAdmin)
         setAuthToken(token)
@@ -24,7 +28,7 @@ const AuthProvider = ({ children }) => {
 
     // Authentication callbacks passed down by the Context Provider
     const login = async (loginInfo) => {
-        const response = await axios.post(ENDPOINT + "auth/login", ObjectRenamer.toBackend(loginInfo), Api.defaults)
+        const response = await axios.post(ENDPOINT + "auth/login", ObjectRenamer.toBackend(loginInfo), API.defaults)
 
         if (response.status === 201 || response.status === 200) {
             localStorage.setItem('token', JSON.stringify(response.data))
@@ -37,7 +41,7 @@ const AuthProvider = ({ children }) => {
     }
 
     const register = async (registerInfo) => {
-        const response = await axios.post(ENDPOINT + "auth/register", ObjectRenamer.toBackend(registerInfo), Api.defaults)
+        const response = await axios.post(ENDPOINT + "auth/register", ObjectRenamer.toBackend(registerInfo), API.defaults)
         
         if (response.status === 200 || response.status === 201) {
             localStorage.setItem('token', JSON.stringify(response.data))
@@ -51,24 +55,29 @@ const AuthProvider = ({ children }) => {
 
     const logout = async () => {
         localStorage.removeItem('token')
-        Api.defaults.headers.token = null
+        API.defaults.headers.token = null
+        API.defaults.userId = null
         setAuthenticated(false)
         setIsAdmin(false)
     }
 
     // Checks for session tokens
     useEffect(() => {
-        let tokenString = localStorage.getItem('token')
+        (async () => {
+            let tokenString = localStorage.getItem('token')
 
-        if (tokenString != null) {
-            handleToken(JSON.parse(tokenString))
-        }
-        else {
-            setIsAdmin(false)
-            setAuthenticated(false)
-        }
+            if (tokenString != null) {
+                handleToken(JSON.parse(tokenString))
+                const cartSummary = await API.getCartSummary()
+                setCartSummary(cartSummary)
+            }
+            else {
+                setIsAdmin(false)
+                setAuthenticated(false)
+            }
 
-        setIsWaitingAuth(false)
+            setIsWaitingAuth(false)
+        })()
     }, [])
 
     if (isWaitingAuth) {
@@ -76,7 +85,7 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ authenticated, login, logout, register, isAdmin, authToken, cartSize, setCartSize }}>
+        <AuthContext.Provider value={{ authenticated, login, logout, register, isAdmin, authToken, cartSummary, setCartSummary }}>
             {children}
         </AuthContext.Provider>
     )
@@ -94,188 +103,158 @@ const encodeDataToURL = (data) => {
     return url.join("&")
 }
 
-class Api {
+function isSuccessStatus(response) {
+    return response.status >= 200 && response.status < 300
+}
+
+async function backendRequest(path, data, func) {
+    try {
+        const funcMap = {
+            "POST": axios.post,
+            "PUT": axios.put,
+            "GET": axios.get,
+            "DELETE": axios.delete
+        }
+
+        const uri = getEndpoint(path)
+        let response = null
+        
+        if (data != null) {
+            response = await funcMap[func](uri, data, API.defaults)
+        }
+        else {
+            response = await funcMap[func](uri, API.defaults)
+        }
+
+        if (isSuccessStatus(response)) {
+            return response.data
+        }
+        else {
+            console.warn(response)
+            return null
+        }
+    }
+    catch (err) {
+        console.warn(err)
+        return null
+    }
+}
+
+async function POST(path, data) {
+    return backendRequest(path, data, "POST")
+}
+
+async function PUT(path, data) {
+    return backendRequest(path, data, "PUT")
+}
+
+async function GET(path) {
+    return backendRequest(path, null, "GET")
+}
+
+async function DELETE(path) {
+    return backendRequest(path, null, "DELETE")
+}
+
+function getEndpoint(path) {
+    let endpoint = ENDPOINT + path
+    if (endpoint.indexOf(':userId') !== -1) {
+        endpoint = endpoint.replace(':userId', API.defaults.userId)
+    }
+    return endpoint
+}
+
+class API {
     static defaults = {
         headers: {
-            'Access-Control-Allow-Origin': 'http://localhost:3000',
+            'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Credentials': 'true'
         }
     }
 
-    static async getCartSize(userId) {
-        const uri = ENDPOINT + "user/cart/size/" + userId
-        const response = await axios.get(uri, Api.defaults)
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            return 0
-        }
-    }
-
-    static async getProductsBatch(genres, limit, skip, minRating, maxRating) {
+    static async getProductsBatch(genres, limit, skip, minRating, maxRating, searchTerm) {
         limit = limit || 10
         skip = skip || 0
 
-        const queryURL = ENDPOINT + "product?" + encodeDataToURL({ genres, limit, skip, minRating, maxRating })
-        const response = await axios.get(queryURL, Api.defaults)
+        const query = { genres, limit, skip, minRating, maxRating }
 
-        if (response.status === 200) {
-            return response.data
+        if (searchTerm != null && searchTerm.length > 0) {
+            query.searchTerm = searchTerm
         }
-        else {
-            return null
-        }
+
+        const queryURL = "product?" + encodeDataToURL(query)
+        return await GET(queryURL)
     }
 
     static async getProductsPageCount(genres, sort, limit, sortAsc) {
         limit = limit || 10
 
-        const queryURL = ENDPOINT + "product/pageCount?" + encodeDataToURL({ genres, sort, limit, sortAsc })
-        const response = await axios.get(queryURL, Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            return null
-        }
+        const queryURL = "product/pageCount?" + encodeDataToURL({ genres, sort, limit, sortAsc })
+        return await GET(queryURL)
     }
 
-    static async mergeSettings(id, update) {
-        const uri = ENDPOINT + "user/" + id
-        const response = axios.put(uri, ObjectRenamer.toBackend(update), Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn(response)
-            return null
-        }
+    static async mergeSettings(update) {
+        return await PUT("user/:userId", ObjectRenamer.toBackend(update))
     }
 
-    static async mergeCardData(id, update) {
-        const uri = ENDPOINT + "user/card/" + id
-        const response = await axios.post(uri, ObjectRenamer.toBackend(update), Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn(response)
-            return null
-        }
+    static async mergeCardData(update) {
+        return await POST("user/card/:userId", ObjectRenamer.toBackend(update))
     }
 
-    static async getCardData(id) {
-        const uri = ENDPOINT + "user/card/" + id
-        const response = await axios.get(uri, Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn(response)
-            return null
-        }
+    static async getCardData() {
+        return await GET("user/card/:userId")
     }
 
-    static deleteUser(id) {
-        const uri = ENDPOINT + "user/" + id
-        return axios.delete(uri, Api.defaults)
+    static async deleteUser() {
+        return await DELETE("user/:userId")
     }
 
-    static async getUser(id) {
-        const uri = ENDPOINT + "user/" + id
-        const response = await axios.get(uri, Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn(response)
-            return null
-        }
+    static async getUser() {
+        return await GET("user/:userId")
     }
 
     static async getProduct(prodId) {
-        const uri = ENDPOINT + "product/" + prodId
-        try {
-            const response = await axios.get(uri, Api.defaults)
-            if (response.status === 200) {
-                return response.data
-            }
-            else {
-                console.warn(response)
-                return null
-            }
-        }
-        catch (err) {
-            console.warn(err)
-        }
-
-        return null
+        return await GET("product/" + prodId)
     }
 
-    static async setCart(userId, update) {
-        const uri = ENDPOINT + "cart/" + userId
-        const response = await axios.put(uri, update, Api.defaults)
-
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn(response)
-            return null
-        }
+    static async setCart(update) {
+        return await PUT("cart/:userId", update)
     }
 
-    static async addProductToCart(userId, prodId) {
-        const uri = ENDPOINT + "cart/" + userId + "/add/" + prodId
-        const response = await axios.post(uri, {}, Api.defaults)
-        return response.status === 200
+    static async addProductToCart(prodId) {
+        return await POST("cart/:userId/add/" + prodId, {})
     }
 
-    static deleteCart(userId) {
-        const uri = ENDPOINT + "cart/" + userId
-        return axios.delete(uri, Api.defaults)
+    static async removeProductFromCart(prodId) {
+        return await DELETE("cart/:userId/remove/" + prodId)
     }
 
-    static async getCart(id) {
-        const uri = ENDPOINT + "cart/" + id
-        const response = await axios.get(uri, Api.defaults)
-        
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn("Failed to get Cart:", response)
-            return null
-        }
+    static async deleteCart() {
+        return await DELETE("cart/:userId")
     }
 
-    static adminCreateProduct(productId) {
-        const uri = ENDPOINT + "product/"
-        const response = axios.post(uri, productId, Api.defaults)
-        if (response.status === 200) {
-            return response.data
-        }
-        else {
-            console.warn("Failed to add Product to Cart:", response)
-            return null
-        }
+    static async getCart() {
+        return await GET("cart/:userId")
     }
 
-    static adminEditProduct(prodID, update) {
-        const uri = ENDPOINT + "product/" + prodID
-        return axios.put(uri, update, Api.defaults)
-    }
-
-    static adminDeleteProduct(prodID) {
-        const uri = ENDPOINT + "product/" + prodID
-        return axios.delete(uri, Api.defaults)
+    // Returns cart data without querying any product info besides their IDs
+    static async getCartSummary() {
+        return await GET("cart/:userId/summary")
     }
 }
 
-export { Api as default, AuthContext, AuthProvider }
+class AdminAPI {
+    static createProduct(productId) {
+        return POST("product/", productId)
+    }
+
+    static editProduct(prodID, update) {
+        return POST("product/" + prodID, update)
+    }
+
+    static deleteProduct(prodID) {
+        return DELETE("product/" + prodID)
+    }
+}
+
+export { API as default, AdminAPI, AuthContext, AuthProvider }

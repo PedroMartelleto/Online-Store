@@ -2,8 +2,8 @@ const router = require('express').Router()
 const { User, Product } = require('../dataModel')
 const { authorizeToken } = require('../tokenAuth')
 
-// GET /api/cart/size/:_id
-router.get("/size/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
+// GET /api/cart/summary/:_id
+router.get("/:_id/summary", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
         const user = await User.findById(req.params._id)
         if (!user) {
@@ -11,7 +11,7 @@ router.get("/size/:_id", authorizeToken({ adminOnly: false }), async (req, res) 
             return
         }
 
-        res.status(200).json(user.cart.length)
+        res.status(200).json(user.cart)
     }
     catch (err) {
         console.warn(err)
@@ -101,7 +101,44 @@ router.post("/:_id/add/:prodId", authorizeToken({ adminOnly: false }), async (re
     }
 })
 
-// DELETE /api/cart/:_id
+// DELETE /api/cart/:_id/remove/:prodId (removes a product from the cart)
+router.delete("/:_id/remove/:prodId", authorizeToken({ adminOnly: false }), async (req, res) => {
+    try {
+        if (!req.params.prodId || !req.params._id) {
+            res.status(400).send('Missing Product or User ID.')
+            return
+        }
+
+        let user = await User.findById(req.params._id)
+        if (!user) {
+            res.status(404).send('User not found.')
+            return
+        }
+
+        let prodIndex = -1
+
+        for (let i = 0; i < user.cart.length; ++i) {
+            if (user.cart[i].productId === req.params.prodId) {
+                prodIndex = i
+                break
+            }
+        }
+
+        if (prodIndex >= 0) {
+            user.cart.splice(prodIndex, 1)
+            await user.save()
+            res.status(201).json(user.cart)
+        }
+        else {
+            res.status(200).json(user.cart)
+        }
+    } catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
+// DELETE /api/cart/:_id (deletes the entire cart)
 router.delete("/:_id", authorizeToken({ adminOnly: false }), async (req, res) => {
     try {
         let user = await User.findById(req.params._id)

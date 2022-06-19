@@ -8,7 +8,7 @@ import ResponsiveRow from "../common/responsiveRow"
 import Select from "react-select"
 import update from "immutability-helper"
 import LoadingScreen from "../common/loadingScreen"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 import { Navigate } from "react-router"
 import { ROUTES } from "../App"
 import { Icon } from "@iconify/react"
@@ -34,12 +34,12 @@ const ProductSummary = props => {
             <div className={cx("prodDetails")}>
                 <div className={cx("prodTopCont")}>
                     <div>
-                        <h5 style={{ fontWeight: 500 }}>{prod.title}</h5>
+                        <h5 className={cx("prodTitle")} style={{ fontWeight: 500 }}>{prod.title}</h5>
                         <div>{prod.author}</div>
                     </div>
                     <button onClick={event => {
                         const cartWithoutThisItem = props.cart.filter(item => item.productId !== prod._id)
-                        Api.setCart(props.userId, cartWithoutThisItem)
+                        API.setCart(cartWithoutThisItem)
                         props.setCart(cartWithoutThisItem)
                     }} variant="buy" className={cx("remove")}>
                         <Icon icon="mdi:close" width={24} />
@@ -88,7 +88,7 @@ const CartPage = props => {
         if (isAdmin) return
 
         (async () => {
-            const cart = await Api.getCart(authToken._id)
+            const cart = await API.getCart(authToken._id)
 
             if (cart != null) {
                 setCart(cart)
@@ -120,7 +120,7 @@ const CartPage = props => {
     }
 
     // Simulates shipping
-    const promo = 5
+    const promo = 30
     const fixedShipping = 2.99
     const shipping = subtotal >= promo ? 0 : fixedShipping
 

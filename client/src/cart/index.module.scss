@@ -23,6 +23,13 @@
     justify-content: space-between;
 }
 
+.prodTitle {
+    max-width: 240px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
 .cartPage {
     padding: 32px;
 }

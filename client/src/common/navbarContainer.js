@@ -5,7 +5,7 @@ import Navbar from "./navbar"
 const NavbarContainer = props => {
     return (
         <>
-            <Navbar />
+            <Navbar searchParams={props.searchParams} setSearchParams={props.setSearchParams} />
             <NavBreadcrumb pathName={props.pathName} />
         </>
     )

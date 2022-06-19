@@ -6,7 +6,7 @@ import StoreButton from "../common/storeButton"
 import InputField from "./inputField"
 import ResponsiveRow from "../common/responsiveRow"
 import Payment from "./payment"
-import Api, { AuthContext } from "../api"
+import API, { AuthContext } from "../api"
 import ObjectRenamer from "../api/objectRenamer"
 import { ROUTES } from "../App"
 
@@ -20,7 +20,7 @@ const LoginSettingsPage = props => {
     useEffect(() => {
         (async () => {
             // Gets the user's card data and info
-            const userData = await Api.getUser(authToken._id)
+            const userData = await API.getUser(authToken._id)
 
             if (userData != null) {
                 let oldUserData = localStorage.getItem('token')
@@ -40,7 +40,7 @@ const LoginSettingsPage = props => {
                 setUserData(ObjectRenamer.fromBackend(userData))
             }
 
-            const cardData = await Api.getCardData(authToken._id)
+            const cardData = await API.getCardData()
             setCardData(ObjectRenamer.fromBackend(cardData))
         })()
     }, [ authToken._id, logout ])
@@ -86,7 +86,7 @@ const LoginSettingsPage = props => {
                         <StoreButton
                             className={{ [cx("submit")]: true }}
                             variant="filled"
-                            onMouseDown={event => Api.mergeSettings(authToken._id, userData)}
+                            onMouseDown={event => API.mergeSettings(userData)}
                         >
                             Save settings
                         </StoreButton>
@@ -109,7 +109,7 @@ const LoginSettingsPage = props => {
                             <StoreButton
                                 className={{ [cx("submit")]: true }}
                                 variant="buy"
-                                onMouseDown={event => Api.mergeCardData(authToken._id, cardData)}
+                                onMouseDown={event => API.mergeCardData(cardData)}
                             >
                                 Update payment method
                             </StoreButton>

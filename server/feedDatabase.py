@@ -31,5 +31,17 @@ headers = {'content-type': 'application/json', 'Token': 'Bearer ' + token}
 
 print("Making request...")
 
-dataToSend = json.dumps({ "products": products })
-r = requests.post(url, data=dataToSend, headers=headers)
+
+# Splits the products list into 2000-element chunks
+frags = []
+last_i = 0
+chk = 200
+for i in range(0, len(products), chk):
+    frags.append(products[i:i+chk if i+chk <= len(products) else len(products)])
+
+for frag in tqdm(frags):
+    dataToSend = json.dumps({ "products": frag })
+
+    r = requests.post(url, data=dataToSend, headers=headers)
+
+    assert r.status_code == 201
