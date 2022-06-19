@@ -12,6 +12,10 @@
 
 - Reupload DB
 
+## Less important
+
+- Animations
+
 ## Requirements
  - General Requirements
     - The system must present to all users the list of books
