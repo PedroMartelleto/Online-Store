@@ -6,11 +6,7 @@
 
 - Validate input fields, check for changes
 
-- Admin pages: manage users, edit admins (button)
-
-- Register orders
-
-- Better-looking navbar + responsive design
+- Register orders + quantity in cart should not exceed quantity in stock
 
 - Deploy everything to heroku to avoid CORS issues
 

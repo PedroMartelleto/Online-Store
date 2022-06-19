@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
 })
 
 app.use(cors())
-app.use(express.json({ limit: "100mb" }))
+app.use(express.json({ limit: "20mb" }))
 
 app.use("/api/INTERNAL_USE", require('./routes/internalUse'))
 

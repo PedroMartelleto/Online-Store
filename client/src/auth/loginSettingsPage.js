@@ -40,10 +40,12 @@ const LoginSettingsPage = props => {
                 setUserData(ObjectRenamer.fromBackend(userData))
             }
 
-            const cardData = await API.getCardData()
-            setCardData(ObjectRenamer.fromBackend(cardData))
+            if (!isAdmin) {
+                const cardData = await API.getCardData()
+                setCardData(ObjectRenamer.fromBackend(cardData))
+            }
         })()
-    }, [ authToken._id, logout ])
+    }, [ authToken._id, isAdmin ])
 
     // TODO: Enable save settings only when edited & validate fields
 
@@ -75,7 +77,6 @@ const LoginSettingsPage = props => {
 
                     {isAdmin ? 
                     <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
-                        <InputField label="Admin list (emails)" userData={userData} setUserData={setUserData} />
                         <StoreButton className={{ [cx("submit")]: true }} variant="outlined" onMouseDown={event => window.location.href = ROUTES.manageUsers}>
                             Manage Users
                         </StoreButton>

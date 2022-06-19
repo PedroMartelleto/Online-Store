@@ -19,8 +19,6 @@ const AuthProvider = ({ children }) => {
         API.defaults.headers.token = `Bearer ${token.accessToken}`
         API.defaults.userId = token._id
 
-        console.log(token._id)
-
         setAuthenticated(true)
         setIsAdmin(token.isAdmin)
         setAuthToken(token)
@@ -67,9 +65,12 @@ const AuthProvider = ({ children }) => {
             let tokenString = localStorage.getItem('token')
 
             if (tokenString != null) {
-                handleToken(JSON.parse(tokenString))
-                const cartSummary = await API.getCartSummary()
-                setCartSummary(cartSummary)
+                const token = JSON.parse(tokenString)
+                handleToken(token)
+                if (!token.isAdmin) {
+                    const cartSummary = await API.getCartSummary()
+                    setCartSummary(cartSummary)
+                }
             }
             else {
                 setIsAdmin(false)
@@ -186,13 +187,6 @@ class API {
         return await GET(queryURL)
     }
 
-    static async getProductsPageCount(genres, sort, limit, sortAsc) {
-        limit = limit || 10
-
-        const queryURL = "product/pageCount?" + encodeDataToURL({ genres, sort, limit, sortAsc })
-        return await GET(queryURL)
-    }
-
     static async mergeSettings(update) {
         return await PUT("user/:userId", ObjectRenamer.toBackend(update))
     }
@@ -254,6 +248,20 @@ class AdminAPI {
 
     static async deleteProduct(prodID) {
         return await DELETE("product/" + prodID)
+    }
+
+    static async getUsersList() {
+        return await GET("user/admin/list")
+    }
+
+    static async toggleAdmin(user) {
+        return await PUT("user/" + user._id + "/admin/permissions", {
+            isAdmin: !user.isAdmin
+        })
+    }
+
+    static async deleteUser(userId) {
+        return await DELETE("user/" + userId)
     }
 }
 

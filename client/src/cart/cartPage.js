@@ -85,7 +85,9 @@ const CartPage = props => {
     
     // Runs once. GETs the cart for the authenticated user.
     useEffect(() => {
-        if (isAdmin) return
+        if (isAdmin) {
+            return
+        }
 
         (async () => {
             const cart = await API.getCart(authToken._id)

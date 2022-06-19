@@ -4,6 +4,7 @@ const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 
 const CryptoJS = require('crypto-js')
+const { default: mongoose } = require('mongoose')
 
 // Register
 router.post('/register', async (req, res) => {
@@ -11,12 +12,17 @@ router.post('/register', async (req, res) => {
         // Creates a new user if everything is valid
         // changes the password to a hash
 
-        let userObj = req.body
+        const userObj = {
+            _id: mongoose.Types.ObjectId().toString(),
+            ...req.body
+        }
 
         userObj.password = CryptoJS.AES.encrypt(userObj.password, process.env.PWD_SECRET_KEY).toString()
         userObj.isAdmin = false
+        userObj._id = mongoose.Types.ObjectId().toString()
 
-        let newUser = new User(userObj)
+        const newUser = new User(userObj)
+        newUser._id = mongoose.Types.ObjectId().toString()
         newUser.cart = []
         const savedUser = await newUser.save()
         const { password, ...userWithoutPassword } = savedUser.toObject()

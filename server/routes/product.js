@@ -39,9 +39,12 @@ router.put("/:_id", authorizeToken({ adminOnly: true }), async (req, res) => {
 // POST /api/product/new (creates a new product)
 router.post("/new", authorizeToken({ adminOnly: true }), async (req, res) => {
     try {
+        // Generates a random string with 10 numbers
+        const randomString = Math.random().toString(36).substring(2, 12)
+
         const newProduct = new Product({
             ...req.body,
-            _id: mongoose.Types.ObjectId(),
+            _id: randomString,
             ratingCount: 0,
             reviewCount: 0,
             averageRating: 2.5,
