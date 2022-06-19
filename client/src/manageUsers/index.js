@@ -1,19 +1,27 @@
-import React from "react"
+import React, { useContext } from "react"
 import styles from "./index.module.scss"
 import classNames from "classnames/bind"
 import NavbarContainer from "../common/navbar"
 import StoreButton from "../common/storeButton"
 import { ROUTES } from "../App"
+import { Navigate, useNavigate } from "react-router"
+import { AuthContext } from "../api"
 const cx = classNames.bind(styles)
 
 const ManageUsers = props => {
+    const { isAdmin, logout } = useContext(AuthContext)
+    const navigate = useNavigate()
+    
     const users = 
     [
         { email: "email1@something.com", name: "User 1" },
         { email: "email2@something.com", name: "User 2" },
         { email: "email3@something.com", name: "User 3" }
     ]
-    //props.users
+
+    if (!isAdmin) {
+        return <Navigate to={ROUTES.home} />
+    }
 
     return (
         <div>
@@ -29,7 +37,10 @@ const ManageUsers = props => {
                     <StoreButton
                         className={{ [cx("createAccount")]: true }}
                         variant="outlined"
-                        onMouseDown={event => document.location.href = ROUTES.signUp}
+                        onMouseDown={event => {
+                            logout()
+                            navigate(ROUTES.signUp)
+                        }}
                     >
                         Create account
                     </StoreButton>

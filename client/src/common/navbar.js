@@ -79,7 +79,9 @@ const Navbar = (props) => {
                             </StoreButton>
                         )
                     }
-                    {authenticated ? <StoreButton onMouseDown={event => {
+                    {authenticated ? <StoreButton
+                        variant={cx("compact")}
+                        onMouseDown={event => {
                             logout()
                             navigate(ROUTES.home)
                         }}>

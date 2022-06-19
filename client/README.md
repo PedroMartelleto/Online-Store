@@ -6,9 +6,7 @@
 
 - Validate input fields, check for changes
 
-- Remove cart size call, GET user data by default?, Toggle Add to cart and remove from cart button
-
-- Admin pages
+- Admin pages: manage users, edit admins (button)
 
 - Register orders
 

@@ -160,7 +160,21 @@
     border-radius: 12px;
 }
 
-.detailContainer > img {
+.prodDetailImgContAdmin {
+    top: 16px;
+}
+
+.prodDetailImgCont {
+    position: relative;
+}
+
+.prodDetailsSetImgURL {
+    position: absolute;
+    top: -16px;
+    left: -16px;
+}
+
+.prodDetailImg {
     margin-top: 4px;
     margin-left: 16px;
     flex-grow: 1;

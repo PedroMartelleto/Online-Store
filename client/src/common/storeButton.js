@@ -12,6 +12,7 @@ const StoreButton = props => {
     return (
         <button {...props} className={cx({
             "btn": true,
+            "btnCompact": props.variant === "compact",
             "btnOutlined": props.variant === "outlined",
             "btnFilled": props.variant === "filled",
             "btnSecondary": props.variant === "secondary",

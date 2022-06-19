@@ -42,12 +42,22 @@
     line-height: 22px;
     min-width: 170px;
     min-height: 56px;
-    transition: all 0.3s;
+    transition: all 0.3s ease-in-out;
 }
 
 .btnOutlined {
     border: 2px solid c.$C2A;
     color: c.$C1A;
+}
+
+.btnCompact {
+    margin-left: 8px;
+    padding: 20px !important;
+    min-width: 0px !important;
+}
+
+.btnCompact:hover {
+    background-color: c.$C1E;
 }
 
 .btnFilled {

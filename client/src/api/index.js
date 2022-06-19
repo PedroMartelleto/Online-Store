@@ -244,16 +244,16 @@ class API {
 }
 
 class AdminAPI {
-    static createProduct(productId) {
-        return POST("product/", productId)
+    static async createProduct(prodData) {
+        return await POST("product/new", prodData)
     }
 
-    static editProduct(prodID, update) {
-        return POST("product/" + prodID, update)
+    static async editProduct(prodID, update) {
+        return await PUT("product/" + prodID, update)
     }
 
-    static deleteProduct(prodID) {
-        return DELETE("product/" + prodID)
+    static async deleteProduct(prodID) {
+        return await DELETE("product/" + prodID)
     }
 }
 

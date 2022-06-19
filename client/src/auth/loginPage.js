@@ -38,7 +38,7 @@ const LoginPage = props => {
                             Login
                         </StoreButton>
                         <div className={cx("btnsForgot")}>
-                            <StoreButton className={{[cx("altBtn")]: true}}>
+                            <StoreButton className={{[cx("altBtn")]: true}} onMouseDown={event => window.prompt("Enter your email address below. You will receive an email with instructions to recover your password.")}>
                                 Forgot your password?
                                 <RightArrow className={cx("altArrow")} />
                             </StoreButton>

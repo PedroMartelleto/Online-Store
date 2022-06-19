@@ -1,19 +1,7 @@
+const mongoose = require('mongoose')
 const { Product } = require('../dataModel')
 const router = require('express').Router()
 const { authorizeToken } = require('../tokenAuth')
-
-// POST /api/product (adds a product)
-router.post("/", authorizeToken({ adminOnly: true }), async (req, res) => {
-    try {
-        const newProduct = new Product(req.body)
-        const savedProduct = await newProduct.save()
-        res.status(201).json(savedProduct)
-    }
-    catch (err) {
-        console.warn(err)
-        res.status(500).json(err)
-    }
-})
 
 // POST /api/product/batch (adds a list of products)
 router.post("/batch", authorizeToken({ adminOnly: true }), async (req, res) => {
@@ -41,6 +29,41 @@ router.put("/:_id", authorizeToken({ adminOnly: true }), async (req, res) => {
         Object.assign(product, req.body)
         await product.save()
         res.status(200).json(product)
+    }
+    catch (err) {
+        console.warn(err)
+        res.status(500).json(err)
+    }
+})
+
+// POST /api/product/new (creates a new product)
+router.post("/new", authorizeToken({ adminOnly: true }), async (req, res) => {
+    try {
+        const newProduct = new Product({
+            ...req.body,
+            _id: mongoose.Types.ObjectId(),
+            ratingCount: 0,
+            reviewCount: 0,
+            averageRating: 2.5,
+            fiveStarRatings: 0,
+            fourStarRatings: 0,
+            threeStarRatings: 0,
+            twoStarRatings: 0,
+            oneStarRatings: 0,
+            votes: [0],
+            isbn: -1,
+            isbn13: -1,
+            asin: -1,
+            settings: "Settings",
+            characters: "Characters",
+            awards: "Awards",
+            amazonRedirectLink: "",
+            worldcatRedirectLink: "",
+            booksInSeries: req.body.series != null && req.body.series.length > 0,
+            recommendedBooks: ""
+        })
+        const savedProduct = await newProduct.save()
+        res.status(201).json(savedProduct)
     }
     catch (err) {
         console.warn(err)
