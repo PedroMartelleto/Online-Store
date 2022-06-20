@@ -13,7 +13,7 @@ const InputField = props => {
             <input
                 id={props.label}
                 type={props.type || "text"}
-                value={props.userData[props.label] || ""}
+                value={props.userData != null ? (props.userData[props.label] || "") : ""}
                 onChange={event => {
                     props.setUserData(update(props.userData, {
                         [props.label]: {

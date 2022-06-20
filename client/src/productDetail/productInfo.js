@@ -10,6 +10,8 @@ import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
 const cx = classNames.bind(styles)
 
 function findInCart(cartSummary, prodId) {
+    if (cartSummary == null) return -1
+
     for (let i = 0; i < cartSummary.length; ++i) {
         if (String(cartSummary[i].productId) === String(prodId)) {
             return i
@@ -19,12 +21,39 @@ function findInCart(cartSummary, prodId) {
 }
 
 const PrimaryDetailButton = ({ prod, cartSummary, setCartSummary, isAdmin, isNewProduct, navigate }) => {
-    let indexInCart = findInCart(cartSummary, prod._id)
+    let storeButtonContents = null
+    
+    let indexInCart = prod == null ? -1 : findInCart(cartSummary, prod._id)
+
+    if (!isAdmin) {
+        // If the item is in the cart, the button should say "Remove from cart"
+        if (indexInCart < 0) {
+            storeButtonContents = (<div className={cx("addToCart")}>
+                <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
+                <span>Add to cart</span>
+            </div>)
+        }
+        else {
+            storeButtonContents = (<div className={cx("addToCart")}>
+                <InlineIcon className={cx("plus")} icon="mdi:minus" width={22} />
+                <span>Remove from cart</span>
+            </div>)
+        }
+    }
+    else {
+        // If the product is new, we are creating a new product, so the button should say "Create product"
+        if (isNewProduct) {
+            storeButtonContents = "Create new product"
+        }
+        else {
+            storeButtonContents = "Confirm changes"
+        }
+    }
 
     return (
         <StoreButton
             variant="buy"
-            disabled={!isAdmin && prod.quantity <= 0}
+            disabled={prod == null || (!isAdmin && prod.quantity <= 0)}
             onMouseDown={event => {
                 // OnMouseDown in "Confirm Changes" / "Add To Cart" / "Create new Product"
                 (async() => {
@@ -93,16 +122,7 @@ const PrimaryDetailButton = ({ prod, cartSummary, setCartSummary, isAdmin, isNew
                     }
                 })()
             }}>
-            {!isAdmin ? (indexInCart < 0 ?
-                <div className={cx("addToCart")}>
-                    <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
-                    <span>Add to cart</span>
-                </div>
-                : <div className={cx("addToCart")}>
-                    <InlineIcon className={cx("plus")} icon="mdi:minus" width={22} />
-                    <span>Remove from cart</span>
-                </div>)
-                : (isNewProduct ? "Create new product" : "Confirm changes")}
+            {storeButtonContents}
         </StoreButton>
     )
 }
