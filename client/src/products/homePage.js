@@ -15,42 +15,45 @@ const cx = classNames.bind(styles)
 const HomePage = props => {
     const { isAdmin, authToken, authenticated } = useContext(AuthContext)
     const [ products, setProducts ] = useState([])
+    const numProductsToShow = 12
 
     useEffect(() => {
         (async () => {
-            const prods = await API.getProductsBatch(null, 9, 0, null, null)
+            const prods = await API.getProductsBatch(null, numProductsToShow, 0, null, null)
             setProducts(prods)
         })()
     }, [])
-
-    const numProductsToShow = 9
 
     return (
         <>
             <NavbarContainer />
             <div className={cx("homePage")}>
                 <div className={cx("titleCont")}>
-                        <h3>
-                            {!authenticated || authToken == null || authToken.firstName == null ? "Welcome!" : "Welcome, " + authToken.firstName + "!"}
-                        </h3>
-                        {isAdmin ? 
-                            <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
-                                {"Add a New Book "}<RightArrow color="white" />
-                            </StoreButton>
-                        : undefined}
+                    <h3>
+                        {!authenticated || authToken == null || authToken.firstName == null ? "Welcome!" : "Welcome, " + authToken.firstName + "!"}
+                    </h3>
+                    {isAdmin ? 
+                        <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
+                            {"Add a New Book "}<RightArrow color="white" />
+                        </StoreButton>
+                    : undefined}
                     </div>
-                <ResponsiveRow classNames={{[cx("leftAligned")]: true}}>
-                    <CategoriesText
-                        title="Best-selling products"
-                        links={genresSortedByVoteCount.genresSortedByVoteCount.slice(0, 5)}
-                        button="Explore"
-                    />
-                    {products != null ? products.slice(0, numProductsToShow).map(prod => <ProductCard
-                        border={false}
-                        product={prod}
-                        key={prod._id}
-                    />) : null}
-                </ResponsiveRow>
+                    <div className={cx("leftMenu")}>
+                        <div className={cx("leftMenuLeft")}>
+                            <CategoriesText
+                                noPadding={true}
+                                title="More Categories"
+                                links={genresSortedByVoteCount.genresSortedByVoteCount.slice(10, 32)}
+                            />
+                        </div>
+                        <ResponsiveRow classNames={{[cx("leftAligned")]: true}}>
+                            {products != null ? products.slice(0, numProductsToShow).map(prod => <ProductCard
+                                border={false}
+                                product={prod}
+                                key={prod._id}
+                            />) : null}
+                        </ResponsiveRow>
+                    </div>
             </div>
         </>
     )

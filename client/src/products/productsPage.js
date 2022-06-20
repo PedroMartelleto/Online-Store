@@ -74,11 +74,6 @@ const ProductsPage = props => {
                     </div>) : undefined}
                 <div className={cx("leftMenu")}>
                     <div className={cx("leftMenuLeft")}>
-                        <CategoriesText
-                            noPadding={true}
-                            title="Categories"
-                            links={genresSortedByVoteCount.genresSortedByVoteCount.slice(0, 8)}
-                        />
                         <div className={cx("rating")}>
                             <h4>Rating</h4>
                             <StarsFilter
@@ -88,13 +83,11 @@ const ProductsPage = props => {
                                     setMaxRating(values[1])
                                 }}
                             />
-                            <StoreButton
-                                className={{[cx("filterBtn")]: true}}
-                                disabled={(minRating === maxRating) || (minRating > maxRating) || (Number(minRating) === Number(searchParams.get('minRating')) && Number(maxRating) === Number(searchParams.get('maxRating')))}
-                                variant="outlined"
-                                onMouseDown={event => setSearchParams({ minRating, maxRating })}>
-                                Filter
-                            </StoreButton>
+                            <CategoriesText
+                                noPadding={true}
+                                title="More Categories"
+                                links={genresSortedByVoteCount.genresSortedByVoteCount.slice(10, 32)}
+                            />
                         </div>
                     </div>
                     <ResponsiveRow classNames={{ [cx("leftAligned")]: true }}>
