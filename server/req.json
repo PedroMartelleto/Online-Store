@@ -1,0 +1,11 @@
+{
+    "email" : "admin@email.com",
+    "password" : "1234",
+    "phoneNumber" : "0",
+    "firstName" : "admin",
+    "lastName" : "adminson",
+    "address" : "street",
+    "city" : "city",
+    "state" : "state",
+    "zip" : "123"
+}

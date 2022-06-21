@@ -11,6 +11,23 @@ router.post('/register', async (req, res) => {
     try {
         // Creates a new user if everything is valid
         // changes the password to a hash
+        
+        const email_regex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
+
+        if (req.body.email && !email_regex.test(req.body.email)) {
+            res.status(400).send('Invalid email')
+            return
+        }
+
+        if (req.body.phoneNumber && req.body.phoneNumber.match(/[a-z]/i)) {
+            res.status(400).send('Invalid phone number')
+            return
+        }
+
+        if (req.body.zipCode && req.body.zipCode.match(/[a-z]/i)) {
+            res.status(400).send('Invalid zip code')
+            return
+        }
 
         const userObj = {
             _id: mongoose.Types.ObjectId().toString(),
