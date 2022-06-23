@@ -18,7 +18,7 @@ Book data imported from the [Goodreads dataset in Kaggle](https://www.kaggle.com
 Clone the repository
 
 ```
-git clone [https://github.com/pedromartelleto/aiplayground.git](https://github.com/PedroMartelleto/Online-Store.git)
+git clone https://github.com/PedroMartelleto/Online-Store.git
 ```
 
 Install dependencies
