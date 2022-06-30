@@ -12,6 +12,7 @@ import CartPage from "./cart/cartPage"
 import ManageUsers from "./manageUsers"
 import { PrivateRoute, AdminRoute } from "./common/privateRoute"
 import { AuthProvider } from "./api"
+import OrderCompletePage from "./orderComplete"
 
 const ROUTES = {
 	home: "/",
@@ -22,7 +23,8 @@ const ROUTES = {
 	signUp: "/signUp",
 	userSettings: "/user",
 	userCart: "/user/cart",
-	manageUsers: "/admin/manageUsers"
+	manageUsers: "/admin/manageUsers",
+	orderComplete: "/orderComplete",
 }
 
 const App = () => {
@@ -43,6 +45,8 @@ const App = () => {
 				
 					<Route path={ROUTES.userSettings} element={<PrivateRoute><LoginSettingsPage/></PrivateRoute>} />
 					<Route path={ROUTES.userCart} element={<PrivateRoute><CartPage/></PrivateRoute>} />
+
+					<Route path={ROUTES.orderComplete} element={<PrivateRoute><OrderCompletePage/></PrivateRoute>} />
 				</Routes>
 			</Router>
 		</AuthProvider>

@@ -12,7 +12,7 @@ const AuthProvider = ({ children }) => {
     const [ isWaitingAuth, setIsWaitingAuth ] = useState(true)
     const [ isAdmin, setIsAdmin ] = useState(false)
     const [ authToken, setAuthToken ] = useState(null)
-    const [ cartSummary, setCartSummary ] = useState(null)
+    const [ cartSummary, setCartSummary ] = useState([])
 
     // Callback that handles token authentication
     const handleToken = (token) => {
@@ -26,28 +26,39 @@ const AuthProvider = ({ children }) => {
 
     // Authentication callbacks passed down by the Context Provider
     const login = async (loginInfo) => {
-        const response = await axios.post(ENDPOINT + "auth/login", ObjectRenamer.toBackend(loginInfo), API.defaults)
+        try {
+            const response = await axios.post(ENDPOINT + "auth/login", ObjectRenamer.toBackend(loginInfo), API.defaults)
 
-        if (response.status === 201 || response.status === 200) {
-            localStorage.setItem('token', JSON.stringify(response.data))
-            handleToken(response.data)
+            if (response.status === 201 || response.status === 200) {
+                localStorage.setItem('token', JSON.stringify(response.data))
+                handleToken(response.data)
+            }
+            else {
+                setAuthenticated(false)
+                setIsAdmin(false)
+                return "Incorrect email or password"
+            }
         }
-        else {
-            setAuthenticated(false)
-            setIsAdmin(false)
+        catch (err) {
+            return "Incorrect email or password"
         }
     }
 
     const register = async (registerInfo) => {
-        const response = await axios.post(ENDPOINT + "auth/register", ObjectRenamer.toBackend(registerInfo), API.defaults)
-        
-        if (response.status === 200 || response.status === 201) {
-            localStorage.setItem('token', JSON.stringify(response.data))
-            handleToken(response.data)
+        try {
+            const response = await axios.post(ENDPOINT + "auth/register", ObjectRenamer.toBackend(registerInfo), API.defaults)
+            
+            if (response.status === 200 || response.status === 201) {
+                localStorage.setItem('token', JSON.stringify(response.data))
+                handleToken(response.data)
+            }
+            else {
+                setAuthenticated(false)
+                setIsAdmin(false)
+            }
         }
-        else {
-            setAuthenticated(false)
-            setIsAdmin(false)
+        catch (err) {
+            return "Email already in use"
         }
     }
 
@@ -69,7 +80,12 @@ const AuthProvider = ({ children }) => {
                 handleToken(token)
                 if (!token.isAdmin) {
                     const cartSummary = await API.getCartSummary()
-                    setCartSummary(cartSummary)
+                    if (cartSummary != null) {
+                        setCartSummary(cartSummary)
+                    }
+                    else {
+                        logout()
+                    }
                 }
             }
             else {
@@ -197,6 +213,10 @@ class API {
 
     static async getCardData() {
         return await GET("user/card/:userId")
+    }
+
+    static async makeOrder() {
+        return await POST("user/order/:userId", {})
     }
 
     static async deleteUser() {

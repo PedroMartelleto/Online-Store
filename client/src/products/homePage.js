@@ -9,6 +9,7 @@ import StoreButton, { RightArrow } from "../common/storeButton"
 import API, { AuthContext } from "../api"
 import { ROUTES } from "../App"
 import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
+import { useNavigate } from "react-router"
 
 const cx = classNames.bind(styles)
 
@@ -16,6 +17,7 @@ const HomePage = props => {
     const { isAdmin, authToken, authenticated } = useContext(AuthContext)
     const [ products, setProducts ] = useState([])
     const numProductsToShow = 12
+    const navigate = useNavigate()
 
     useEffect(() => {
         (async () => {
@@ -33,7 +35,7 @@ const HomePage = props => {
                         {!authenticated || authToken == null || authToken.firstName == null ? "Welcome!" : "Welcome, " + authToken.firstName + "!"}
                     </h3>
                     {isAdmin ? 
-                        <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
+                        <StoreButton variant="filled" onMouseDown={event => navigate(ROUTES.newProduct)} >
                             {"Add a New Book "}<RightArrow color="white" />
                         </StoreButton>
                     : undefined}

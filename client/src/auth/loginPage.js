@@ -6,13 +6,16 @@ import InputField from "./inputField"
 import StoreButton, { RightArrow } from "../common/storeButton"
 import ResponsiveRow from "../common/responsiveRow"
 import { AuthContext } from "../api"
-import { Navigate } from "react-router"
+import { Navigate, useNavigate } from "react-router"
 import { ROUTES } from "../App"
+import update from "immutability-helper"
 const cx = classNames.bind(styles)
 
 const LoginPage = props => {
     const [ userData, setUserData ] = useState({})
+    const [ errorMsg, setErrorMsg ] = useState("")
     const { login, authenticated } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     if (authenticated) {
         return <Navigate to={ROUTES.home} />
@@ -24,17 +27,35 @@ const LoginPage = props => {
             <div className={cx("loginPage")}>
                 <h3>Login to your account</h3>
                 <div className={cx("login")}>
-                    <InputField label="Email address" userData={userData} setUserData={setUserData} />
-                    <InputField type="password" label="Password" userData={userData} setUserData={setUserData} />
+                    <InputField required={true} label="Email address" userData={userData} setUserData={setUserData} />
+                    <InputField required={true} type="password" label="Password" userData={userData} setUserData={setUserData} />
                 </div>
                 <ResponsiveRow classNames={{ [cx("rowCompact")]: true }}>
                     <div className={cx("btns")}>
-                        <StoreButton className={{ [cx("submit")]: true }} variant="filled" onMouseDown={
-                            event => {
-                                event.preventDefault()
-                                login(userData)
+                        <StoreButton
+                            className={{ [cx("submit")]: true }}
+                            variant="filled"
+                            disabled={userData.ShowErrors && userData.AnyErrors}
+                            onMouseDown={
+                                event => {
+                                    if (userData.AnyErrors) {
+                                        setUserData(update(userData, {
+                                            ShowErrors: {
+                                                $set: true
+                                            }
+                                        }))
+                                    }
+                                    else {
+                                        (async () => {
+                                            const result = await login(userData)
+                                            if (result != null && result.length > 0) {
+                                                setErrorMsg(result)
+                                            }
+                                        })()
+                                    }
+                                }
                             }
-                        }>
+                        >
                             Login
                         </StoreButton>
                         <div className={cx("btnsForgot")}>
@@ -42,13 +63,16 @@ const LoginPage = props => {
                                 Forgot your password?
                                 <RightArrow className={cx("altArrow")} />
                             </StoreButton>
-                            <StoreButton className={{[cx("altBtn")]: true}} onMouseDown={event => window.location.href = ROUTES.signUp }>
+                            <StoreButton className={{[cx("altBtn")]: true}} onMouseDown={event => navigate(ROUTES.signUp) }>
                                 I don't have an account
                                 <RightArrow className={cx("altArrow")} />
                             </StoreButton>
                         </div>
                     </div>
                 </ResponsiveRow>
+                <div className={cx("validationError")}>
+                    {errorMsg}
+                </div>
             </div>
         </>
     )

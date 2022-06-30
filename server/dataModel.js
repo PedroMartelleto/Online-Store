@@ -81,7 +81,7 @@ const CardSchema = new mongoose.Schema(
 
 const OrderSchema = new mongoose.Schema(
     {
-        userId: { type: mongoose.Types.ObjectId, required: true, unique: true, ref: "User" },
+        userId: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
         products: [
             {
                 productId: { type: String },

@@ -9,7 +9,7 @@ import StoreButton, { RightArrow } from "../common/storeButton"
 import API, { AuthContext } from "../api"
 import Pages from "./pages"
 import { ROUTES } from "../App"
-import { useSearchParams } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import StarsFilter from "./starsFilter"
 import NotFoundPage from "../notFound/notFoundPage"
 import genresSortedByVoteCount from "../genresSortedByVoteCount.json"
@@ -26,6 +26,7 @@ const ProductsPage = props => {
 
     const [minRating, setMinRating] = useState(searchParams.get('minRating') || 0)
     const [maxRating, setMaxRating] = useState(searchParams.get('maxRating') || 5)
+    const navigate = useNavigate()
 
     let paramsGenres = searchParams.get('genres')
     if (!Array.isArray(paramsGenres)) {
@@ -63,7 +64,7 @@ const ProductsPage = props => {
                 <div className={cx("titleCont")}>
                     <h1>{genres.map((genre, i) => genre + (i < genres.length - 1 ? " " : ""))}</h1>
                     {isAdmin ?
-                        <StoreButton variant="filled" onMouseDown={event => window.location.href = ROUTES.newProduct} >
+                        <StoreButton variant="filled" onMouseDown={event => navigate(ROUTES.newProduct)} >
                             {"Add a New Book "}<RightArrow color="white" />
                         </StoreButton>
                         : undefined}

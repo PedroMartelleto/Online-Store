@@ -1,6 +1,20 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.paymentContainer {
+    padding: 20px 32px;
+}
+
+.paymentTitle {
+    margin-top: 22px;
+    font-weight: 600;
+}
+
+.validationError {
+    color: red;
+    font-weight: 11px;
+}
+
 .remove {
     width: 42px;
     height: 42px;

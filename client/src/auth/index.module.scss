@@ -1,6 +1,19 @@
 @use "../common/sizes" as f;
 @use "../common/colors" as c;
 
+.error {
+    border: 1px solid red !important;
+}
+
+.successMsg {
+    color: rgba(50, 108, 23, 0.78);
+}
+
+.validationError {
+    color: red;
+    font-weight: 11px;
+}
+
 .loginPage {
     padding: 0px 48px 48px 48px;
 }

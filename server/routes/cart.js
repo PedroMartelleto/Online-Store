@@ -11,7 +11,7 @@ router.get("/:_id/summary", authorizeToken({ adminOnly: false }), async (req, re
             return
         }
 
-        res.status(200).json(user.cart)
+        res.status(200).json(user.cart == null ? [] : user.cart)
     }
     catch (err) {
         console.warn(err)

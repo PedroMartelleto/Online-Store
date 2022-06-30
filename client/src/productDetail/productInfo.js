@@ -24,6 +24,7 @@ const PrimaryDetailButton = ({ prod, cartSummary, setCartSummary, isAdmin, isNew
     let storeButtonContents = null
     
     let indexInCart = prod == null ? -1 : findInCart(cartSummary, prod._id)
+    let notAvailableToAddToCart = false
 
     if (!isAdmin) {
         // If the item is in the cart, the button should say "Remove from cart"
@@ -32,6 +33,7 @@ const PrimaryDetailButton = ({ prod, cartSummary, setCartSummary, isAdmin, isNew
                 <InlineIcon className={cx("plus")} icon="mdi:plus" width={22} />
                 <span>Add to cart</span>
             </div>)
+            notAvailableToAddToCart = prod.quantity <= 0
         }
         else {
             storeButtonContents = (<div className={cx("addToCart")}>
@@ -53,7 +55,7 @@ const PrimaryDetailButton = ({ prod, cartSummary, setCartSummary, isAdmin, isNew
     return (
         <StoreButton
             variant="buy"
-            disabled={prod == null || (!isAdmin && prod.quantity <= 0)}
+            disabled={prod == null || (!isAdmin && prod.quantity <= 0) || notAvailableToAddToCart}
             onMouseDown={event => {
                 // OnMouseDown in "Confirm Changes" / "Add To Cart" / "Create new Product"
                 (async() => {

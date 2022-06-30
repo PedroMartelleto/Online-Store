@@ -9,23 +9,26 @@ import Select from "react-select"
 import update from "immutability-helper"
 import LoadingScreen from "../common/loadingScreen"
 import API, { AuthContext } from "../api"
-import { Navigate } from "react-router"
+import { Navigate, useNavigate } from "react-router"
 import { ROUTES } from "../App"
 import { Icon } from "@iconify/react"
+import Payment, { UpdatePaymentMethodButton } from "../auth/payment"
 
 const cx = classNames.bind(styles)
 
-const unitOptions = [
-    { value: 1, label: '1' },
-    { value: 2, label: '2' },
-    { value: 3, label: '3' },
-    { value: 4, label: '4' },
-    { value: 5, label: '5' },
-];
 
 const ProductSummary = props => {
     const prod = props.product
-    
+    const { cartSummary, setCartSummary } = useContext(AuthContext)
+
+    const unitOptions = [
+        { value: 1, label: '1' }
+    ]
+
+    for (let i = 2; i <= Math.min(prod.quantity, 10); ++i) {
+        unitOptions.push({ value: i, label: i.toString() })
+    }
+
     return (
         <ResponsiveRow>
             <div className={cx("prodImgContainer")}>
@@ -41,6 +44,9 @@ const ProductSummary = props => {
                         const cartWithoutThisItem = props.cart.filter(item => item.productId !== prod._id)
                         API.setCart(cartWithoutThisItem)
                         props.setCart(cartWithoutThisItem)
+
+                        const cartSummaryWithoutThisItem = cartSummary.filter(item => item.productId !== prod._id)
+                        setCartSummary(cartSummaryWithoutThisItem)
                     }} variant="buy" className={cx("remove")}>
                         <Icon icon="mdi:close" width={24} />
                     </button>
@@ -59,11 +65,14 @@ const ProductSummary = props => {
                                 isSearchable={true}
                                 options={unitOptions}
                                 onChange={newValue => {
-                                    props.setCart(update(props.cart, {
+                                    const newCartData = update(props.cart, {
                                         [props.index]: { quantity: {
                                             $set: newValue.value
                                          }}
-                                    }))
+                                    })
+                                    props.setCart(newCartData)
+                                    // Updates quantity in cart (API)
+                                    API.setCart(newCartData) 
                                 }}
                                 className={cx("unitSelect")}
                             />
@@ -80,8 +89,12 @@ const ProductSummary = props => {
 
 const CartPage = props => {
     const [ isLoading, setIsLoading ] = useState(true)
-    const { isAdmin, authToken } = useContext(AuthContext)
+    const { isAdmin, authToken, setCartSummary } = useContext(AuthContext)
     const [ cart, setCart ] = useState([])
+    const [ errorMsg, setErrorMsg ] = useState("")
+    const [ cardData, setCardData ] = useState(null)
+    const [ isInvalidCard, setIsInvalidCard ] = useState(true)
+    const navigate = useNavigate()
     
     // Runs once. GETs the cart for the authenticated user.
     useEffect(() => {
@@ -94,6 +107,13 @@ const CartPage = props => {
 
             if (cart != null) {
                 setCart(cart)
+            }
+
+            const cardData = await API.getCardData(authToken._id)
+
+            if (cardData != null) {
+                setCardData(cardData)
+                setIsInvalidCard(false)
             }
 
             setIsLoading(false)
@@ -129,6 +149,17 @@ const CartPage = props => {
     // Shipping date is hardcoded
     const today = new Date(new Date().getTime()+(5*24*60*60*1000));
     const monthName = today.toLocaleString('default', { month: 'long' });
+
+    const purchase = async () => {
+        const result = await API.makeOrder()
+        if (result == null) {
+            setErrorMsg("Failed to make purchase. Either your payment information is invalid or one or more items are out of stock.")
+        }
+        else {
+            setCartSummary([])
+            navigate(ROUTES.orderComplete)
+        }
+    }
 
     return (
         <>
@@ -180,9 +211,39 @@ const CartPage = props => {
                         <h3>{(shipping + subtotal).toFixed(2)} USD</h3>
                     </div>
                 </div>
-                <StoreButton disabled={cart.length <= 0} className={{ [cx("completeOrderBtn")]: true }} variant="buy">
-                    Complete order
-                </StoreButton>
+                {isInvalidCard ? (
+                    <div className={cx("paymentContainer")}>
+                        <h3 className={cx("paymentTitle")}>
+                            Payment method
+                        </h3>
+                        <div className="caption">
+                            Please enter your payment method
+                        </div>
+                        <Payment cardData={cardData || {}} setCardData={setCardData} />
+                        <UpdatePaymentMethodButton
+                            disabled={cart.length <= 0}
+                            label="Update info and complete roder"
+                            customCallback={purchase}
+                            cardData={cardData || {}}
+                            setCardData={setCardData}
+                            setErrorMsg={setErrorMsg}
+                        />
+                    </div>
+                ) : (
+                    <StoreButton
+                        disabled={cart.length <= 0}
+                        className={{ [cx("completeOrderBtn")]: true }}
+                        variant="buy"
+                        onMouseDown={event => {
+                            purchase()
+                        }}
+                    >
+                        Complete order
+                    </StoreButton>
+                )}
+                <div className={cx("validationError")}>
+                    {errorMsg}
+                </div>
             </div>
         </>
     )

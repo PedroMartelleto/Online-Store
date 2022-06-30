@@ -1,6 +1,10 @@
 @use "../common/colors" as c;
 @use "../common/sizes" as f;
 
+.highlightBtn {
+    margin-left: 6px;
+}
+
 .labelsHorizontal {
     display: flex;
     flex-direction: row;

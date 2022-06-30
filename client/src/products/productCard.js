@@ -132,10 +132,10 @@ const ProductCard = props => {
                 <h6>{prod.author}</h6>
                 <StarRating star={Math.round(prod.averageRating * 10) / 10} />
                 <div className={cx("productCardTail")}>
-                    <h4 style={{fontWeight: 600}}>
+                    <h5 style={{fontSize: 16, fontWeight: 600}}>
                         {prod.price + " USD"}
-                    </h4>
-                    <StoreButton variant="buy" onMouseDown={event => navigate(`/products/${prod._id}`)}>
+                    </h5>
+                    <StoreButton className={{[cx("highlightBtn")]: true}} variant="buy" onMouseDown={event => navigate(`/products/${prod._id}`)}>
                         {!isAdmin ? "Buy now" : "Edit"}
                     </StoreButton>
                 </div>

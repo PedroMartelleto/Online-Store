@@ -1,0 +1,14 @@
+@use "../common/sizes" as f;
+@use "../common/colors" as c;
+
+.backToHome {
+    text-decoration: underline;
+    color: c.$C2A;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+}
+
+.backToHome:hover {
+    color: c.$C2C;
+    text-decoration: underline;
+}
