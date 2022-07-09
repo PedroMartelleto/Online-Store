@@ -55,6 +55,31 @@ const NewProduct = Object.freeze({
     recommendedBooks: [""]
 })
 
+const ReadMoreText = ({ text, maxCharCount, ...otherProps }) => {
+    const [ isExpanded, setIsExpanded ] = useState(false)
+
+    const handleClick = () => {
+        setIsExpanded(!isExpanded)
+    }
+
+    return (
+        <p {...otherProps}>
+            {text.length > maxCharCount ? (
+                <>
+                    {isExpanded ? text : text.substring(0, maxCharCount) + "..."}
+                    <button className={cx("readMoreButton")} onClick={handleClick}>
+                        {isExpanded ? "Read Less" : "Read More"}
+                    </button>
+                </>
+            ) : (
+                <>
+                    {text}
+                </>
+            )}
+        </p>
+    )
+}
+
 const ProductDetailPage = props => {
     const params = useParams()
     const { isAdmin } = useContext(AuthContext)
@@ -125,9 +150,16 @@ const ProductDetailPage = props => {
                                 <span>({prod.reviewCount} customer reviews)</span>
                             </div>
                         </div>
-                        <p className={cx("description")} contentEditable={isAdmin} suppressContentEditableWarning={true}>
-                            {prod.description}
-                        </p>
+                        {isAdmin ? (
+                            <p className={cx("description")} contentEditable={isAdmin} suppressContentEditableWarning={true}>
+                                {prod.description}
+                            </p>
+                        ) : (
+                            <ReadMoreText text={prod.description}
+                                maxCharCount={460}
+                                className={cx("description", "descrWithReadMore")}
+                            />
+                        )}
                         <ProductInfo product={prod} />
                     </div>
                     <div className={cx({"prodDetailImgCont": true, "prodDetailImgContAdmin": isAdmin})}>

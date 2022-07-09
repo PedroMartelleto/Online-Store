@@ -45,6 +45,7 @@
   },
   "devDependencies": {
     "@iconify/react": "^3.2.1",
+    "node-sass": "^7.0.1",
     "react-snap": "^0.2.0",
     "sass": "^1.52.3"
   }

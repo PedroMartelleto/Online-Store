@@ -146,6 +146,31 @@
     margin-bottom: 16px;
 }
 
+.titleH1 {
+    max-width: 600px;
+    overflow: wrap;
+}
+
+.seriesH3 {
+    max-width: 600px;
+    overflow: wrap;
+}
+
+.descrWithReadMore {
+    max-height: none !important;
+    overflow-y: hidden !important;
+    height: fit-content;
+}
+
+.readMoreButton {
+    display: inline-block;
+    color: c.$C2A;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
 .detailText > p {
     font-family: 'Open Sans', sans-serif;
     font-size: 17px;
