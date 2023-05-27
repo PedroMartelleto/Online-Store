@@ -3,9 +3,9 @@
 A fully functional book store built using the MERN stack (MongoDB, Express, React, Node.js) that allows users to buy books and admins to create, edit and delete the books available.
 Book data imported from the [Goodreads dataset in Kaggle](https://www.kaggle.com/datasets/jealousleopard/goodreadsbooks).
 
-<p>
+<div>
   <video autoplay="true" controls="false" src="https://user-images.githubusercontent.com/35240934/175203442-8d1aea3b-f969-4a9b-945e-397a1bbf4d3a.mp4" />
-</p>
+</div>
 
 ## Getting Started
 
