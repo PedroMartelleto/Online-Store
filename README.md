@@ -44,3 +44,8 @@ npm test
 ## Versioning
 
 See [Semantic Versioning](http://semver.org/). For the versions available, see the [tags on this repository](https://github.com/pedromartelleto/mathweb/tags).
+
+## Authors
+
+Pedro M B Rezende (@PedroMartelleto)
+João Marcos (@joaomarcoscsilva)
